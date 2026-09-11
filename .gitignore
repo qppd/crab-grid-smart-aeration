@@ -1,0 +1,21 @@
+# References folder (internal/personal docs)
+references/
+
+# OS files
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment files
+.env
+.env.local
+
+# Temporary files
+*.tmp
+*.log
