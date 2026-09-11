@@ -56,6 +56,27 @@
 
 ---
 
+## 6. Electrical Protection, Calibration & Consumables (NEW — gap analysis)
+
+> These were missing from the original BOM even though other rows and notes depend on them: Compatibility note #2 says to "add a 12V→5V buck for the camera", the EC/pH/DO sensors need calibration standards, the DO probe consumes membranes, the pH electrode needs storage fluid, and the salinity-correction scenario pumps "brine" that nothing stored or made. Verified live Sept 2026.
+
+| # | Item | Qty | Est. Price | Rating (verified) | URL | Why needed |
+|---|------|-----|-----------|-------------------|-----|------------|
+| 19 | **12V→5V 3A buck converter** (camera node power) | 1 | ₱56–120 | 4.8★ | [Shopee listing](https://shopee.ph/DC-6-24V-12V/24V-to-5V-3A-CAR-USB-Charger-Module-DC-Buck-step-down-Converter-5V-power-supply-module-i.1137847711.24079849445) | Compatibility note #2 tells you to add one — here it is. Feeds the ESP32-CAM 5V rail from the 12V battery ✔ |
+| 20 | **Low-voltage disconnect (LVD) — XH-M609, 12–36V** | 1 | ₱97–176 | 4.9★ (1,694 ratings) | [Shopee listing](https://shopee.ph/XH-M609-HCW-M635-DC-12V-36V-LVD-Voltage-Protection-Module-Low-Voltage-Disconnect-i.346991773.8230589416) · [alt ₱120](https://shopee.ph/XH-M609-DC-12V-36V-Low-Voltage-Battery-Disconnect-Protection-Module-i.1579828572.42808684182) | LiFePO4 BMS cut-off (~10V) is a dead-battery event, not a protection strategy. LVD disconnects loads at a set voltage (e.g. 12.0V ≈ 20% DoD) so the battery is never deep-discharged and the system recovers on morning sun |
+| 21 | **DC blade fuse + holder set** (main ~15A, controller ~5A, pumps ~10A) | 1 set | ₱50–150 | check listing; buy ≥ 4.7★ | [Shopee search: blade fuse holder](https://shopee.ph/search?keyword=blade%20fuse%20holder%20waterproof) | A 200 Ah battery feeding unprotected pump wiring on a float is a melt/fire risk. One main fuse + per-branch fuses sized to each load |
+| 22 | **PG7/IP68 nylon cable glands** (10-pc kit) | 1 kit | ₱78–120 | 4.8★ (9,383 ratings) | [Shopee listing](https://shopee.ph/Nylon-Cable-Gland-10pcs.-PG7-~-PG63-IP68-Waterproof-Connector-Durable-Plastic-Cable-Fitting-i.1468298505.40724321556) | Item 18 buys the IP65 enclosure but no feedthroughs — sensor/pump cables through plain drilled holes destroy the IP rating |
+| 23 | **pH buffer calibration set 4.01 / 6.86 / 9.18** | 1 set | ₱275 | see listing | [Shopee listing](https://shopee.ph/pH-Calibration-Solution-pH-4.01-6.86-9.18-Buffer-for-pH-Meter-Hydroponics-Lab-Professional-Grade-i.911703494.48855977022) | PH-4502C is factory-offset only — 2-point calibration (4.01 + 6.86) is required before any pH reading is meaningful; re-calibrate every 2–4 weeks |
+| 24 | **EC calibration standard 12.88 mS/cm** | 1 bottle | ~₱150–300 | check listing; buy ≥ 4.7★ | [Shopee search: EC 12.88 mS/cm solution](https://shopee.ph/search?keyword=ec%20calibration%20solution%2012.88) | DFRobot EC K=10 firmware requires calibration; 12.88 mS/cm ≈ 35 ppt sits exactly at the seawater point that matters for this project |
+| 25 | **DO probe spare membrane caps + electrolyte refill** (SEN0237-A consumables) | 1 kit | ~₱500–1,000 | check DFRobot store | [DFRobot wiki (maintenance)](https://wiki.dfrobot.com/sen0237-a/) · [Shopee search](https://shopee.ph/search?keyword=dissolved%20oxygen%20probe%20membrane) | Galvanic DO probes consume membrane caps + electrolyte — without spares the ₱12k sensor goes dead mid-thesis |
+| 26 | **pH electrode storage solution (KCl)** | 1 bottle | ~₱150–300 | check listing; buy ≥ 4.7★ | [Shopee search: KCl storage solution](https://shopee.ph/search?keyword=ph%20electrode%20storage%20solution%20kcl) | The E-201-C electrode dies in weeks if stored dry or in distilled water — KCl storage is what makes the ₱1,395 probe last the project |
+| 27 | **Handheld salinity refractometer 0–100 ppt, ATC** | 1 | ~₱500–800 | 4.7★ (47,728 ratings) | [Shopee listing](https://shopee.ph/Salinity-Refractometer-For-Seawater-And-Marine-Fishkeeping-Aquarium-0-100-Ppt-With-Automatic-Temperature-Compensation-i.119376804.27414109823) | Ground-truth cross-check for the EC sensor during calibration and for verifying brine mixing after rain events — no power needed |
+| 28 | **Brine reserve: rock/feed-grade salt ~25 kg + sealed 100–120 L drum** | 1 set | ~₱1,400–1,700 | check listing | [Shopee search: rock salt](https://shopee.ph/search?keyword=rock%20salt%20feed%20grade) | The salinity-correction scenario pumps "brine" — nothing in the BOM stored or made it. 25 kg salt → ~90 L saturated brine (≈26 wt%) in a drum staged beside the float, dosed by the bilge pumps |
+
+> Dev-time only (not system hardware): a USB-TTL adapter (~₱80) to flash the ESP32-CAM if you don't already own one.
+
+---
+
 ## ✅ Compatibility Verification (system-level)
 
 | # | Check | Verdict |
@@ -93,9 +114,10 @@
 | Aeration + pumps (2× 12V 30–60 L/min air pumps, air stones/manifold, 2× bilge) | ~₱4,500 |
 | Power (2× 100W panels, MPPT 20A, 200Ah LiFePO4) | ~₱30,000 |
 | Structure & materials (boxes ×8, foam-filled pontoons ×8–12, frame, misc) | ~₱12,500 |
-| **TOTAL (Tier 1 sensors)** | **≈ ₱62,000** |
-| **TOTAL (all sensors)** | **≈ ₱78,000** |
+| Protection, calibration & consumables (new §6: buck, LVD, fuses, glands, buffers, EC standard, DO membranes, KCl, refractometer, brine reserve) | ~₱3,000–4,800 |
+| **TOTAL (Tier 1 sensors)** | **≈ ₱67,000** |
+| **TOTAL (all sensors)** | **≈ ₱83,000** |
 
-> **Buy order for the thesis timeline:** ① Heltec ×2 + DS18B20 + relay + bilge pump (₱~3,500) → build & test the control loop on the bench. ② Gateway + EC sensor (₱~16,000) → close the remote dashboard loop. ③ Power system (₱~30,000) → go off-grid. ④ DO/pH sensors + camera + boxes + pontoons + air pumps (₱~28,000) → full feature set before panel defense.
+> **Buy order for the thesis timeline:** ① Heltec ×2 + DS18B20 + relay + bilge pump (₱~3,500) → build & test the control loop on the bench. ② Gateway + EC sensor (₱~16,000) → close the remote dashboard loop. ③ Power system (₱~30,000) → go off-grid. ④ DO/pH sensors + camera + boxes + pontoons + air pumps (₱~28,000) → full feature set before panel defense. Section 6 items ride with the phases that need them: fuse + LVD + buck with ③; pH buffers + EC standard with ②; DO membranes + KCl + brine reserve with ④; buy the refractometer early (②) to ground-truth salinity from day one.
 
 > 💡 If the 200Ah LiFePO4 (₱20–25k) busts the budget: a 100Ah unit keeps **1 night** of aeration reserve — acceptable only if the DO-triggered firmware aggressively duty-cycles the air pumps at night (e.g., 30 min on / 30 min off below 5 ppm) and panels recharge by mid-morning. The 200Ah spec is the *safe* recommendation for keeping crabs alive unattended.
