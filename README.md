@@ -7,12 +7,16 @@ An off-grid smart aquaculture system for mud crab fattening in mangrove areas �
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform: ESP32](https://img.shields.io/badge/Platform-ESP32-red.svg)](https://www.espressif.com/)
 [![LoRaWAN: AS923](https://img.shields.io/badge/LoRaWAN-AS923-green.svg)](https://lora-alliance.org/)
-[![Solar Powered](https://img.shields.io/badge/Power-Solar%2012V-yellow.svg)]()
+[![Power: 220V AC from House Solar](https://img.shields.io/badge/Power-220V%20AC%20from%20House%20Solar-yellow.svg)]()
 [![Status: In Development](https://img.shields.io/badge/Status-In%20Development-orange.svg)]()
 
 **Author:** [QPPD](https://www.github.com/qppd)
 
 </div>
+
+---
+
+> 📚 **Where to find what:** this README = overview, architecture and timeline · [`Components.md`](Components.md) = engineering specs and validation rationale · [`docs/BOM.md`](docs/BOM.md) = prices, product links, compatibility verification and power budget.
 
 ---
 
@@ -25,8 +29,7 @@ An off-grid smart aquaculture system for mud crab fattening in mangrove areas �
 - [Electronics & Hardware](#electronics--hardware)
 - [Power System](#power-system)
 - [Software & Firmware](#software--firmware)
-- [Bill of Materials (BOM)](#bill-of-materials-bom)
-- [Budget Summary](#budget-summary)
+- [BOM & Budget](#bom--budget)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Hardware Setup](#hardware-setup)
@@ -43,9 +46,9 @@ An off-grid smart aquaculture system for mud crab fattening in mangrove areas �
 
 ## About the Project
 
-Mud crab (*Scylla serrata*) fattening is a vital livelihood in Southeast Asian mangrove communities, but crabs are notoriously cannibalistic — they eat each other when crowded or molting. Traditional farming relies on manual water monitoring, which is reactive rather than proactive. In remote mangrove areas, there is no reliable electricity or Wi-Fi, making conventional IoT solutions impractical.
+Mud crab (*Scylla serrata*) fattening is a vital livelihood in Southeast Asian mangrove communities, but crabs are notoriously cannibalistic — they eat each other when crowded or molting. Traditional farming relies on manual water monitoring, which is reactive rather than proactive. In these remote mangrove areas there is no utility grid and no Wi-Fi, and whatever power exists comes from small household solar systems — which makes conventional IoT solutions impractical.
 
-This project solves these problems with a **fully autonomous, off-grid aquaculture system** that:
+This project solves these problems with a **low-power, remotely monitored aquaculture system** that:
 
 1. Physically protects crabs using individual floating cages
 2. Continuously senses water quality with multiple environmental sensors
@@ -53,7 +56,7 @@ This project solves these problems with a **fully autonomous, off-grid aquacultu
 4. Transmits data over **LoRaWAN** to a remote dashboard for real-time monitoring
 5. Provides visual security through an overhead camera system
 
-The entire system runs on **solar power with battery backup**, making it deployable in the most remote coastal locations.
+The prototype is powered from the **household's existing solar installation** (220V AC, available 24/7 from an array and a battery bank of over 600 Ah), so it needs no panels or batteries of its own — only a protected AC drop from the house to the float plus a 12V DC supply on site.
 
 ---
 
@@ -62,9 +65,9 @@ The entire system runs on **solar power with battery backup**, making it deploya
 | # | Feature | Description |
 |---|---------|-------------|
 | 🛡️ | **Physical Protection** | Individual floating cages (horizontal crab fattening boxes) physically separate crabs to prevent cannibalism. |
-| 📊 | **Water Quality Sensing** | Continuous monitoring for dissolved oxygen, ammonia, pH, temperature, and salinity — the invisible threats that kill crabs. |
+| 📊 | **Water Quality Sensing** | Continuous monitoring of dissolved oxygen, pH, temperature and salinity — plus a derived ammonia estimate — targeting the invisible threats that kill crabs. |
 | 🚨 | **Automated First Aid** | When conditions become dangerous (e.g., salinity dropping from heavy rain), the system automatically triggers aerators or pumps to correct water quality before crabs die. |
-| 📡 | **Off-Grid Remote Control** | LoRaWAN enables farmers to monitor sensor data and control pumps from a remote dashboard — even in mangrove areas with no electricity or Wi-Fi. |
+| 📡 | **Remote Monitoring & Control** | LoRaWAN carries sensor data and pump commands to a remote dashboard — even where there is no internet or Wi-Fi at the pond. |
 | 📷 | **Visual Security** | Overhead camera to monitor crab molting, deter animal predators, and spot human poachers. |
 
 ---
@@ -90,12 +93,12 @@ The entire system runs on **solar power with battery backup**, making it deploya
                   ┌────────────┘     │      │      │      └────────────┐
                   │                  │      │      │                   │
           ┌───────┴────────┐  ┌─────┴────┐ │ ┌────┴───────┐  ┌───────┴──────┐
-          │  Water Sensors │  │  Relay   │ │ │  Camera    │  │  Solar Power │
-          │  · EC/Salinity │  │  Module  │ │ │  ESP32-CAM │  │  System      │
-          │  · pH Probe    │  │  (8-Ch)  │ │ │  OV2640    │  │  · 200W Panels│
-          │  · DS18B20 ×2  │  └────┬─────┘ │ └────────────┘  │  · MPPT 20A │
-          │  · DO Sensor   │       │       │                  │  · 200Ah     │
-          └────────────────┘  ┌────┴─────┐ │                  │    LiFePO4   │
+          │  Water Sensors │  │  Relay   │ │ │  Camera    │  │  House Solar │
+          │  · EC/Salinity │  │  Module  │ │ │  ESP32-CAM │  │  AC Feed     │
+          │  · pH Probe    │  │  (8-Ch)  │ │ │  OV2640    │  │  · 220V 24/7 │
+          │  · DS18B20 ×2  │  └────┬─────┘ │ └────────────┘  │  · RCD 30mA  │
+          │  · DO Sensor   │       │       │                  │  · 12V 30A   │
+          └────────────────┘  ┌────┴─────┐ │                  │    PSU       │
                               │ Actuators│ │                  └──────────────┘
                               │ · Air    │ │
                               │   Pumps  │ │
@@ -105,8 +108,8 @@ The entire system runs on **solar power with battery backup**, making it deploya
                                            │
                               ┌─────────────┴───────────┐
                               │   8 × Individual Crab   │
-                              │   Fattening Cages on     │
-                              │   PVC Floater Grid       │
+                              │   Fattening Boxes on     │
+                              │   Foam Pontoon Grid      │
                               └─────────────────────────┘
 ```
 
@@ -117,12 +120,12 @@ The entire system runs on **solar power with battery backup**, making it deploya
 | Specification | Detail |
 |---------------|--------|
 | **Pond Area** | 500 sqm (modular conceptual prototype) |
-| **Capacity** | 8 individual crab fattening cages |
-| **Cage Material** | Non-plastic frames to prevent overheating |
+| **Capacity** | 8 individual fattening boxes on the pontoon grid, one crab per box (the anti-cannibalism constraint) |
+| **Boxes & frames** | Slotted plastic boxes, shaded under the frame; frame/gantry in bamboo or marine plywood so no bare plastic sits in direct sun |
 | **Floaters** | Ready-made foam-filled pontoon floats (×8–12) — puncture-proof, ≥ 50 kg buoyancy per cage. Hollow PVC pipes fail buoyancy math (see [Components.md](Components.md)) |
 | **Aeration** | 2 × 12V DC air pumps (30–60 L/min, multi-outlet) + air stone per cage — sized for 8 cages with N+1 redundancy |
 | **Water Circulation** | Air-driven through tubes for movement |
-| **Controller Placement** | Centered in the setup for optimal wiring |
+| **Controller & Power** | Controller centered in the setup for optimal wiring. Powered by a 220V AC drop from the household solar system (24/7) → 30 mA RCD + breaker → 12V 30A DC supply |
 
 > 📋 See [`Components.md`](Components.md) for the full component specifications and [`docs/BOM.md`](docs/BOM.md) for the detailed Bill of Materials with verified product links and pricing.
 
@@ -149,15 +152,13 @@ The entire system runs on **solar power with battery backup**, making it deploya
 
 | Component | Specification |
 |-----------|--------------|
-| **Solar Panel** | 2 × 100W 12V Monocrystalline (IP67) |
-| **Charge Controller** | MPPT 20A, 12V/24V with LCD display |
-| **Battery** | 12V 200Ah LiFePO4 with BMS |
+| **AC Source** | 220V AC drop from the household solar system (array + **>600 Ah** battery bank + inverter) — available 24/7 |
+| **AC Protection** | 30 mA RCD/GFCI + 2-pole breaker at the house end; outdoor-rated earthed cable (2.5 mm²) run overhead or in conduit |
+| **On-Site DC Supply** | 12V 30A (360 W) switching PSU → pumps, relay module, controller; 12V→5V buck for the camera node |
 
-**Power Budget:**
-- Daytime generation: 2 × 100W × 5 sun-hours = **1,000 Wh/day** (≈ 500 Wh at 50% cloud derating)
-- Daily load: ~430–700 Wh/day (incl. night aeration — air pumps are a life-support load)
-- Night-only load: ~50–60W × 12h = **600 Wh** (50 Ah)
-- Battery reserve: 200 Ah → **2+ nights of operation** without solar charging
+**Night load:** ~50–60 W (≈ 5 A at 12 V) for aeration, a life-support load easily covered by the house battery bank — the full ⚡ Power Budget is in [`docs/BOM.md`](docs/BOM.md).
+
+> ⚠️ **Single point of failure:** no on-site battery, so a tripped breaker or a cut cable stops aeration. Alert on uplink loss and keep the breaker at the house end reachable.
 
 ---
 
@@ -170,40 +171,23 @@ The entire system runs on **solar power with battery backup**, making it deploya
 
 ---
 
-## Bill of Materials (BOM)
+## BOM & Budget
 
-See the complete Bill of Materials with verified product links, ratings, and pricing:
+Every part, price, product link and rating lives in [`docs/BOM.md`](docs/BOM.md), together with the compatibility verification and the power budget. Headline totals: **Tier 1 sensors ≈ ₱41,000–51,000**; **full sensor set ≈ ₱54,500–65,800** (per-category ranges are in the BOM).
 
-| Category | Est. Cost (PHP) |
-|----------|----------------|
-| Boards & Connectivity | ~₱15,500 |
-| Sensors (Tier 1: EC + DS18B20) | ~₱5,600 |
-| Sensors (Full set: + pH + DO) | ~₱21,500 |
-| Aeration + Pumps (air pumps ×2 + stones, bilge ×2) | ~₱4,500 |
-| Power System (2× panels, MPPT, 200Ah battery) | ~₱30,000 |
-| Structure & Materials (cages, pontoons, misc) | ~₱12,500 |
-| **Total (Tier 1 sensors)** | **≈ ₱62,000** |
-| **Total (all sensors)** | **≈ ₱78,000** |
+Purchase is phased to match the thesis timeline — all four phases ≈ **₱50,000–57,000** for the full build:
 
-> 📋 See [`docs/BOM.md`](docs/BOM.md) for detailed product links, verified ratings, and sourcing from Shopee PH / Lazada PH.
+### Phase 1 — Bench Testing (~₱5,000)
+Heltec V3 ×2 + DS18B20 + relay module + one bilge pump → build & test the control loop on the bench (12V from a lab supply, or buy the on-site PSU now).
 
----
+### Phase 2 — Remote Dashboard (~₱17,000)
+RAK7268 gateway + EC/salinity sensor + refractometer + calibration standard → close the remote monitoring loop.
 
-## Budget Summary
+### Phase 3 — Power to the Float (~₱3,000–4,500)
+Protected 220V AC drop from the house (30 mA RCD + breaker) + 12V 30A DC supply + fuses/glands → run the float off the household solar system.
 
-The project supports a **phased purchase strategy** to match a thesis timeline:
-
-### Phase 1 — Bench Testing (~₱3,000)
-Heltec V3 ×2 + DS18B20 + relay module + bilge pump → build & test the control loop on the bench.
-
-### Phase 2 — Remote Dashboard (~₱16,000)
-RAK7268 Gateway + EC/Salinity sensor → close the remote monitoring loop.
-
-### Phase 3 — Off-Grid Deployment (~₱30,000)
-Solar panels + MPPT controller + 200Ah LiFePO4 battery → go fully off-grid.
-
-### Phase 4 — Full Feature Set (~₱28,000)
-DO sensor + pH sensor + ESP32-CAM camera + crab fattening cages + pontoons + air pumps → complete system before panel defense.
+### Phase 4 — Full Feature Set (~₱25,000–30,000)
+DO sensor + pH sensor + ESP32-CAM camera + crab fattening boxes + foam pontoons + air pumps + brine reserve → complete system before panel defense.
 
 ---
 
@@ -215,19 +199,21 @@ DO sensor + pH sensor + ESP32-CAM camera + crab fattening cages + pontoons + air
 - Heltec ESP32 Board Package
 - A [The Things Network](https://www.thethingsnetwork.org/) or ChirpStack account
 - RAK7268 LoRaWAN Gateway (configured for AS923)
+- pH/EC calibration standards and a handheld refractometer (see [`docs/BOM.md`](docs/BOM.md) §6)
 
 ### Hardware Setup
 
-1. **Scaffold the floating grid** on foam-filled pontoon floats with non-plastic cage frames.
-2. **Mount 8 crab fattening cages** on the floater grid with one crab per cage.
-3. **Position the controller node** (Heltec V3) in the center of the setup in an IP65 waterproof enclosure.
-4. **Connect sensors** to the ESP32-S3 ADC/GPIO pins.
-5. **Wire the relay module** to drive air pumps and bilge pumps.
-6. **Install the solar power system** — panel → MPPT controller → battery → load distribution.
+1. **Scaffold the floating grid** on foam-filled pontoon floats, with the frame and gantry in bamboo or marine plywood.
+2. **Mount the 8 fattening boxes** on the grid, one crab per box, shaded from direct sun.
+3. **Position the controller node** (Heltec V3) in the centre of the setup in an IP65 enclosure.
+4. **Connect the sensors** to the ESP32-S3 ADC/GPIO pins — with a voltage divider on the pH channel.
+5. **Wire the relay module** to the air pumps and bilge pumps.
+6. **Run the power drop** — 220V AC from the house (30 mA RCD + breaker at the house end) → 12V 30A DC supply on the float → fused distribution.
+7. **Calibrate before trusting any reading** — 2-point pH (4.01 / 6.86), EC with the 12.88 mS/cm standard, and cross-check salinity with the refractometer.
 
 ### Firmware Installation
 
-1. Open the firmware directory in Arduino IDE or PlatformIO.
+1. Create the `firmware/` directory (planned — see [Project Structure](#project-structure)) and open it in Arduino IDE or PlatformIO.
 2. Install required libraries:
    - `Heltec_ESP32`
    - `LoRaWAN_Arduino` (SX1262)
@@ -251,40 +237,37 @@ DO sensor + pH sensor + ESP32-CAM camera + crab fattening cages + pontoons + air
 ## Project Structure
 
 ```
-PROJECT2/
+crab-grid-smart-aeration/
 ├── README.md              # This file
 ├── Components.md          # Full components specification list
-├── docs/
-│   └── BOM.md             # Bill of Materials with verified product links
-├── references/
-│   └── Concept-Questions.md  # Project concept and Q&A
-├── firmware/              # ESP32 source code
-│   ├── main_controller/   # Heltec V3 sensor + LoRaWAN firmware
-│   └── camera_node/       # ESP32-CAM streaming firmware
-├── dashboard/             # Dashboard configuration and scripts
-├── docs/                  # Additional documentation
-│   ├── architecture.md
-│   ├── wiring-diagrams/
-│   └── images/
 ├── LICENSE                # MIT License
-└── .gitignore
+├── .gitignore
+├── docs/                  # Documentation
+│   ├── BOM.md             # Bill of Materials — product links, ratings, prices
+│   ├── architecture.md    # ⏳ planned
+│   ├── wiring-diagrams/   # ⏳ planned
+│   └── images/            # ⏳ planned
+├── firmware/             # ⏳ planned — ESP32 source code
+│   ├── main_controller/  # ⏳ planned — Heltec V3 sensor + LoRaWAN firmware
+│   └── camera_node/      # ⏳ planned — ESP32-CAM streaming firmware
+└── dashboard/            # ⏳ planned — dashboard configuration and scripts
+⏳ = planned / not yet in the repository.
+Committed today (5 files): README.md · Components.md · LICENSE · .gitignore · docs/BOM.md
+Create each ⏳ item as its roadmap phase completes; see docs/BOM.md for the AC power build.
 ```
 
 ---
 
 ## Compatibility Notes
 
-| # | Check | Status |
-|---|-------|--------|
-| 1 | LoRa band (Philippines = AS923) | ✅ RAK7268 and Heltec V3 both support AS923 |
-| 2 | Voltage chain (12V battery → pumps/relays, 3.3V logic) | ✅ Onboard LDO + buck converters |
-| 3 | Camera connectivity (WiFi only, not LoRaWAN) | ⚠️ Connect via local AP during visits or place near internet |
-| 4 | Ammonia sensing (no affordable NH₃ sensor) | ⚠️ Estimate from pH + temperature (cited academic method) |
-| 5 | Sensor ADC levels (PH-4502C outputs up to 5V) | ⚠️ Voltage divider needed for ESP32 3.3V input |
-| 6 | Crab cage overheating (plastic walls) | ✅ Non-plastic frames + shading |
-| 7 | Relay load capacity | ✅ All pumps ≤ 10A per channel; 8-ch module covers all loads + spares |
-| 8 | Night operation | ✅ 200Ah battery covers 2+ nights (aeration runs at night) |
-| 9 | Floater buoyancy | ✅ Foam-filled pontoons ≥ 50 kg buoyancy per cage (2:1 safety); hollow PVC pipes would sink — corrected |
+All ten system-level checks, with their verdicts, are in [`docs/BOM.md`](docs/BOM.md). Four items still need action before deployment:
+
+| Open item | Action |
+|-----------|--------|
+| Camera is WiFi-only (video cannot fit LoRa) | Use its own AP during pond visits, run it at the house with the gateway, or fit an LTE camera |
+| No affordable NH₃ sensor | Estimate unionized ammonia from pH + temperature and cite the method in the paper |
+| PH-4502C outputs up to 5V | Add a voltage divider before the 3.3V ESP32 ADC |
+| No on-site battery | Alert on uplink loss (AC-fail module); add a small 12V UPS if unattended nights are critical |
 
 ---
 
@@ -294,8 +277,8 @@ PROJECT2/
 - [x] Component selection and BOM verification
 - [ ] Phase 1: Bench testing with Heltec V3 + basic sensors
 - [ ] Phase 2: LoRaWAN gateway integration and remote dashboard
-- [ ] Phase 3: Off-grid solar deployment
-- [ ] Phase 4: Full feature set (DO, pH, camera, cages)
+- [ ] Phase 3: Power to the float (AC drop from household solar + 12V DC supply)
+- [ ] Phase 4: Full feature set (DO, pH, camera, boxes)
 - [ ] Field testing in mangrove environment
 - [ ] Thesis panel defense
 
