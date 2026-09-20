@@ -158,10 +158,34 @@
 | Protection, calibration & consumables (§6: buck, AC-fail detect, fuses, glands, buffers, EC standards, DO membranes, KCl, refractometer, brine reserve) | ₱3,409–5,315 |
 | Control interface (§7: AUTO/OFF/MANUAL selector + status LEDs) | ₱200–400 |
 | Distribution & sensor hub (§8: PVC air/water grid, per-cage outlets, hose, probe holder) | ₱2,300–4,800 |
-| **TOTAL (Tier 1 sensors)** | **≈ ₱32,350–44,900** |
-| **TOTAL (all sensors)** | **≈ ₱45,750–59,500** |
+|| **TOTAL (Tier 1 sensors)** | **≈ ₱32,350–44,900** |
+|| **TOTAL (all sensors)** | **≈ ₱45,750–59,500** |
 
-> Category figures are ranges; each total is the sum of its low and high ends. The webapp itself costs ₱0 on free tiers (Firebase Spark + Vercel Hobby).
+---
+
+## 💰 GRAND TOTAL SUMMARY
+
+| Build Configuration | Low Estimate | High Estimate |
+|---------------------|-------------|---------------|
+| **Tier 1 Sensors (EC + Temp only)** | **₱32,350** | **₱44,900** |
+| **Full Sensor Set (EC + pH + DO + Temp)** | **₱45,750** | **₱59,500** |
+| ₱50K Cap (Cuts 1–2: No camera, no DO) | **₱32,550** | **₱44,500** |
+| Minimum Viable (Cuts 1–5: No cam, DO, spare, 2nd pump, pH) | **₱29,300** | **₱41,100** |
+
+### Quick Reference: What's Inside Each Total
+
+| Tier | Sensors Included | Actuators | Power | Structure | Est. Range |
+|------|-----------------|-----------|-------|-----------|------------|
+| Tier 1 | EC (#5) + 2× Temp (#7) | 2× air pump, 1× bilge, relay | AC drop, RCD, 12V PSU | 8 boxes, pontoons, frame | ₱32,350–44,900 |
+| Full Set | EC + pH (#6) + DO (#8) + Temp | 2× air pump, 2× bilge, relay | AC drop, RCD, 12V PSU | 8 boxes, pontoons, frame | ₱45,750–59,500 |
+| ₱50K Cap | EC + Temp only | 2× air pump, 1× bilge, relay | AC drop, RCD, 12V PSU | 8 boxes, pontoons, frame | ₱32,550–44,500 |
+| Min Viable | EC + Temp only | 2× air pump, 1× bilge (cheaper), relay | AC drop, RCD, 12V PSU | 8 boxes, pontoons, basic frame | ₱29,300–41,100 |
+
+> **Note:** All totals exclude the webapp (₱0 on Firebase Spark + Vercel Hobby free tiers). Sourcing at low-end listings keeps costs down; always verify current prices before ordering.
+
+---
+
+## Budget Notes
 >
 > 💰 **₱50,000 hardware ceiling:** the camera (#3) and its buck (#19) are the designated first cut (₱705–769) if the build runs over — it is the only optional subsystem. The DO kit (₱12–13k) is what pushes the full set past the ceiling, so it belongs in the last phase; the DO probe and the aerators are never cut.
 >
