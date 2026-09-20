@@ -53,14 +53,14 @@
 >
 > ⚡ **Check the house inverter before deploying:** it has to stay on 24/7 (an inverter switched off at night means no aeration), be rated well above the ~100 W peak (~300 VA+ is ample, inrush included), and be pure-sine if possible — pump motors run hotter on modified-sine output.
 >
-> ⚠️ **Single point of failure:** with no on-site battery, a tripped breaker, cut cable or inverter fault stops aeration — a life-support load. Alert on loss-of-heartbeat (no uplink ≈ power or link down) and keep the house-end breaker reachable; the AC-fail module (#20) makes it an immediate alarm. A small 12 V battery + charger (~₱3–5k) as a pump-only UPS covers unattended nights.
+> ⚠️ **Single point of failure:** with no on-site battery, a tripped breaker, cut cable or inverter fault stops aeration — a life-support load. Alert on loss-of-heartbeat (no uplink ≈ power or link down) and keep the house-end breaker reachable. A small 12 V battery + charger (~₱3–5k) as a pump-only UPS covers unattended nights.
 
 ## 5. Structure & Materials
 
 | # | Item | Qty | Est. Price | Rating (verified) | URL | Notes |
 |---|------|-----|-----------|-------------------|-----|-------|
 | 15 | **Allied Crab Fattening Box** (individual compartments) | 8 | ₱399 ea = ₱3,192 | 4.7★ (370 ratings) | [Shopee listing](https://shopee.ph/Allied-Crab-Fattening-Box-Cage-Indoor-Crab-Farming-i.411519694.28807834583) | ✅ **Count verified (8) and spec fits:** 457 × 406 × 406 mm holds a 0.5–1.5 kg crab; 1 crab per box = anti-cannibalism ✔; drill slots for water exchange; shade covers needed outdoors (note #6) |
-| 16 | 🔴 **Foam-filled pontoon floats** (HDPE/LLDPE, ready-made fish-cage floats) | 8–12 | ~₱400–800 ea = ₱3,500–6,000 | source from local fish-cage suppliers / Shopee-Lazada | [Lazada search: floating pontoon](https://www.lazada.com.ph/tag/plastic-floating-pontoon/) · [Shopee search: fish cage float](https://shopee.ph/search?keyword=fish%20cage%20float) | 🔴 **Not hollow PVC pipes.** Size from the measured dry above-water load (boxes, frame, pumps, electronics, retained pipe water and crab), not from the weight of water inside a slotted submerged cage. Use manufacturer-rated floats (target ≥50 kg each), verify actual load distribution, and apply at least a 2:1 safety factor. Sealed hollow 4″ PVC gives ~2.6 kg/m and is not primary flotation. The pipe grid is conduit only (see §8). |
+| 16 | 🔴 **Round plastic shell + solid foam filling 50×90 cm** — 4 units (each supports 2 crab cages) | 4 | ₱2,643 ea = ₱10,572 | 4.9★ (verified via seller) | [Lazada listing](https://www.lazada.com.ph/products/plastic-floating-platform-i15589282305-s133497781798.html) | 🔴 **Upgraded from generic foam floats.** Each round float (50 cm dia × 90 cm) has ~326 kg theoretical buoyancy (0.318 m³ × 1,025 kg/m³ brackish), yielding **~163 kg usable** at 2:1 safety factor. Two 50×80×40 cm crab boxes (~44 kg each) fit on one float. Arranged 4 floats × 2 cages each = 8 cages. The pipe grid is conduit only (see §8). |
 | 17 | **UV-stabilized PVC/FRP frame preferred; bamboo / marine-plywood alternative + netting + shade cloth** | — | ₱2,000–4,000 | — | [Lazada search: HDPE net](https://www.lazada.com.ph/catalog/?q=hdpe+netting) | Avoid bare plastic in direct sun: the boxes are shaded and stay in water contact. Raw bamboo and ordinary plywood rot/split in a warm brackish mangrove; if retained, seal all faces/end grain with marine epoxy or PU and make contact details replaceable. Specify Grade 316 stainless or nylon fasteners. The air/water pipe grid (#31) rides on this frame. |
 | 18 | Misc: waterproof enclosures (IP65/66), cable, epoxy, Grade 316 stainless/nylon fasteners, mooring rope, cable ties | — | ₱2,500–3,500 | — | [Shopee search: IP65 enclosure](https://shopee.ph/search?keyword=ip65%20waterproof%20enclosure) | Electronics must be sealed — brackish mangrove environment. Use Grade 316 stainless or nylon fasteners; 304 stainless can pit in warm chloride-rich water. Air tubing and the gang valve manifold are #10, fuses are #21, and the pipe grid is §8. |
 
@@ -68,12 +68,11 @@
 
 ## 6. Electrical Protection, Calibration & Consumables
 
-> The items other sections depend on but are easy to forget: the camera's 12V→5V buck, calibration standards (pH and EC), DO probe membranes, pH electrode storage fluid, and the salt reserve the brine-mixing scenario actually pumps. Ratings verified as described in the header.
+> The items other sections depend on but are easy to forget: the camera's LM2596S 24V/12V → 5V USB step-down module, calibration standards (pH and EC), DO probe membranes, pH electrode storage fluid, and the salt reserve the brine-mixing scenario actually pumps. Ratings verified as described in the header.
 
 | # | Item | Qty | Est. Price | Rating (verified) | URL | Why needed |
 |---|------|-----|-----------|-------------------|-----|------------|
-| 19 | **12V→5V 3A buck converter** (camera node power) | 1 | ₱56–120 | 4.8★ | [Shopee listing](https://shopee.ph/DC-6-24V-12V/24V-to-5V-3A-CAR-USB-Charger-Module-DC-Buck-step-down-Converter-5V-power-supply-module-i.1137847711.24079849445) | Feeds the ESP32-CAM 5V rail from the 12 V supply ✔ — required by Compatibility #2 |
-| 20 | **220V AC opto-isolated detection module** (mains-fail input to a GPIO) | 1 | ₱100–250 | 4.8★ | [Shopee search: AC 220V optocoupler detection module](https://shopee.ph/search?keyword=220v%20ac%20opto%20isolation%20detection%20module) | 🔴 **Replaces the LVD, which is obsolete with no on-site battery.** It can log a mains-present state only while the float electronics remain powered. If the same AC feed fails, the ESP32 dies and cannot transmit; the house bridge must alarm on heartbeat loss. Add a small UPS/supercapacitor only if a last-gasp packet is required. |
+| 19 | **LM2596S 24V/12V → 5V USB step-down module (HW-688 / HCW-P715)** — camera node power | 1 | ₱99 | 4.9★ (715 ratings) · LazMall | [Lazada listing](https://www.lazada.com.ph/products/24v12v-to-5v-usb-mobile-phone-dc-dc-step-down-module-lm2596s-hw-688-hcw-p715-do-not-use-for-raspberry-pi-4-i284590120-s446364184.html) | Accepts the 12 V supply and provides a 5 V USB output for the ESP32-CAM. Verify the output voltage and polarity before connecting. **Do not use for Raspberry Pi 4.** |
 | 21 | **DC blade fuse + holder set** (provisional main/controller/pump ratings) | 1 set | ₱50–150 | check listing; buy ≥ 4.7★ | [Shopee search: blade fuse holder](https://shopee.ph/search?keyword=blade%20fuse%20holder%20waterproof) | A 12 V supply feeding unprotected pump wiring on a float is a melt/fire risk. Do not finalize the 15 A/5 A/10 A values from estimates: measure running and inrush current, check conductor ampacity and temperature rise, then size one main fuse and per-branch fuses to the protected conductors and loads. |
 | 22 | **PG7/IP68 nylon cable glands** (10-pc kit) | 1 kit | ₱78–120 | 4.8★ (9,383 ratings) | [Shopee listing](https://shopee.ph/Nylon-Cable-Gland-10pcs.-PG7-~-PG63-IP68-Waterproof-Connector-Durable-Plastic-Cable-Fitting-i.1468298505.40724321556) | Item 18 buys the IP65 enclosure but no feedthroughs — sensor/pump cables through plain drilled holes destroy the IP rating |
 | 23 | **pH buffer calibration set 4.01 / 6.86 / 9.18** | 1 set | ₱275 | see listing | [Shopee listing](https://shopee.ph/pH-Calibration-Solution-pH-4.01-6.86-9.18-Buffer-for-pH-Meter-Hydroponics-Lab-Professional-Grade-i.911703494.48855977022) | PH-4502C is factory-offset only — 2-point calibration (4.01 + 6.86) is required before any pH reading is meaningful; re-calibrate every 2–4 weeks |
@@ -119,7 +118,7 @@
 | # | Check | Verdict |
 |---|-------|---------|
 | 1 | **LoRa band / regulatory status** | ✅ 915 MHz (E22-900M22S / SX1262) — the Philippine NTC licence-free SRD band for low-duty telemetry; both ends on the same band/freq/SF. Confirm maximum EIRP and type-approval before deployment. No TTN/ChirpStack — the dashboard talks to the **house bridge node** over WiFi. |
-| 2 | **Voltage chain and mains safety** | ⚠️ 220V AC (household solar, 24/7) → shore-end 30 mA RCD + breaker (#13) → weatherproof feedthroughs → **12V 30 A PSU (#14)** → 12V pumps/relays directly; 12V→5V buck (#19) for the camera node and the ESP32 DevKit 5V pin (onboard 3.3 V LDO feeds the E22-900M22S — never at 5V). No on-site panel/MPPT/battery. Licensed-electrician installation, PEC review, IP67/IP68 connectors, drip loops, no submerged joints, monthly RCD test, and measured fuse/conductor coordination are deployment gates. |
+| 2 | **Voltage chain and mains safety** | ⚠️ 220V AC (household solar, 24/7) → shore-end 30 mA RCD + breaker (#13) → weatherproof feedthroughs → **12V 30 A PSU (#14)** → 12V pumps/relays directly; LM2596S 24V/12V → 5V USB step-down module (#19) for the camera node and the ESP32 DevKit 5V pin (onboard 3.3 V LDO feeds the E22-900M22S — never at 5V). No on-site panel/MPPT/battery. Licensed-electrician installation, PEC review, IP67/IP68 connectors, drip loops, no submerged joints, monthly RCD test, and measured fuse/conductor coordination are deployment gates. |
 | 3 | **Camera connectivity** | ⚠️ ESP32-CAM uses **WiFi, not LoRa** (video can't fit LoRa bandwidth). Options: (a) farmer connects phone to camera AP during pond visits, (b) put camera at the house with the bridge node where WiFi exists, (c) upgrade to an LTE camera — budget decision for the panel |
 | 4 | **Ammonia sensing gap** | ⚠️ No affordable verified NH₃ sensor on Shopee. Industry option: DFRobot RS485 NH₄⁺ sensor (~$209 / ~₱12k, [dfrobot.com](https://www.dfrobot.com/blog-20760.html)). **Thesis workaround:** pH + temperature can estimate the toxic fraction/risk only; an absolute NH₃ concentration requires measured Total Ammonia Nitrogen (TAN) or a laboratory test. |
 | 5 | **Sensor ADC levels** | ⚠️ PH-4502C outputs up to ~5V with 2.5V offset → use 10 kΩ series + 18 kΩ shunt (5 V → about 3.21 V) or an ADS1115 I2C ADC with 3.3 V level shifting. DFRobot EC/DO boards output ≤3.4V → direct ✔ |
@@ -152,14 +151,14 @@
 |----------|----------|
 | Boards & connectivity (3× ESP32, 3× E22-900M22S+antenna, ESP32-CAM, 8-ch relay) | ₱3,436 |
 | Sensors (Tier 1: EC + 2× DS18B20 → full set incl. pH + DO) | ₱5,647 → ₱19,042–20,241 |
-| Aeration + pumps (2× RESUN MPQ-03 air pumps, air stones/manifold, 2× bilge) | ₱3,300–4,200 |
+| Aeration + pumps (2× RESUN MPQ-03 air pumps, air stones/manifold, 2× bilge) | ₱3,688 |
 | Power — AC drop + protection + 12V supply (outdoor AC run, RCD/breaker, 12V 30 A PSU) | ₱2,900–4,600 |
-| Structure & materials (boxes ×8, foam-filled pontoons ×8–12, frame, misc) | ₱11,200–16,700 |
-| Protection, calibration & consumables (§6: buck, AC-fail detect, fuses, glands, buffers, EC standards, DO membranes, KCl, refractometer, brine reserve) | ₱3,409–5,315 |
+|| Structure & materials (boxes ×8, 4× round floats 50×90, frame, misc) | ₱15,764–21,264 |
+| Protection, calibration & consumables (§6: LM2596S module, fuses, glands, buffers, EC standards, DO membranes, KCl, refractometer, brine reserve) | ₱3,352–5,044 |
 | Control interface (§7: AUTO/OFF/MANUAL selector + status LEDs) | ₱200–400 |
 | Distribution & sensor hub (§8: PVC air/water grid, per-cage outlets, hose, probe holder) | ₱2,300–4,800 |
-|| **TOTAL (Tier 1 sensors)** | **≈ ₱32,350–44,900** |
-|| **TOTAL (all sensors)** | **≈ ₱45,750–59,500** |
+| **TOTAL (Tier 1 sensors)** | **≈ ₱39,787–48,879** |
+| **TOTAL (all sensors)** | **≈ ₱53,182–63,473** |
 
 ---
 
@@ -167,19 +166,19 @@
 
 | Build Configuration | Low Estimate | High Estimate |
 |---------------------|-------------|---------------|
-| **Tier 1 Sensors (EC + Temp only)** | **₱32,350** | **₱44,900** |
-| **Full Sensor Set (EC + pH + DO + Temp)** | **₱45,750** | **₱59,500** |
-| ₱50K Cap (Cuts 1–2: No camera, no DO) | **₱32,550** | **₱44,500** |
-| Minimum Viable (Cuts 1–5: No cam, DO, spare, 2nd pump, pH) | **₱29,300** | **₱41,100** |
+| **Tier 1 Sensors (EC + Temp only)** | **₱39,787** | **₱48,879** |
+| **Full Sensor Set (EC + pH + DO + Temp)** | **₱53,182** | **₱63,473** |
+| ₱50K Cap (Cuts 1–2: No camera, no DO) | **₱39,934** | **₱48,526** |
+| Minimum Viable (Cuts 1–5: No cam, DO, spare, 2nd pump, pH) | **₱36,777** | **₱45,369** |
 
 ### Quick Reference: What's Inside Each Total
 
 | Tier | Sensors Included | Actuators | Power | Structure | Est. Range |
 |------|-----------------|-----------|-------|-----------|------------|
-| Tier 1 | EC (#5) + 2× Temp (#7) | 2× air pump, 1× bilge, relay | AC drop, RCD, 12V PSU | 8 boxes, pontoons, frame | ₱32,350–44,900 |
-| Full Set | EC + pH (#6) + DO (#8) + Temp | 2× air pump, 2× bilge, relay | AC drop, RCD, 12V PSU | 8 boxes, pontoons, frame | ₱45,750–59,500 |
-| ₱50K Cap | EC + Temp only | 2× air pump, 1× bilge, relay | AC drop, RCD, 12V PSU | 8 boxes, pontoons, frame | ₱32,550–44,500 |
-| Min Viable | EC + Temp only | 2× air pump, 1× bilge (cheaper), relay | AC drop, RCD, 12V PSU | 8 boxes, pontoons, basic frame | ₱29,300–41,100 |
+| Tier 1 | EC (#5) + 2× Temp (#7) | 2× air pump, 1× bilge, relay | AC drop, RCD, 12V PSU | 8 boxes, 4× round floats 50×90, frame | ₱39,787–48,879 |
+| Full Set | EC + pH (#6) + DO (#8) + Temp | 2× air pump, 2× bilge, relay | AC drop, RCD, 12V PSU | 8 boxes, 4× round floats 50×90, frame | ₱53,182–63,473 |
+| ₱50K Cap | EC + Temp only | 2× air pump, 1× bilge, relay | AC drop, RCD, 12V PSU | 8 boxes, 4× round floats 50×90, frame | ₱39,934–48,526 |
+| Min Viable | EC + Temp only | 2× air pump, 1× bilge (cheaper), relay | AC drop, RCD, 12V PSU | 8 boxes, 4× round floats 50×90, basic frame | ₱36,777–45,369 |
 
 > **Note:** All totals exclude the webapp (₱0 on Firebase Spark + Vercel Hobby free tiers). Sourcing at low-end listings keeps costs down; always verify current prices before ordering.
 
@@ -187,11 +186,11 @@
 
 ## Budget Notes
 >
-> 💰 **₱50,000 hardware ceiling:** the camera (#3) and its buck (#19) are the designated first cut (₱705–769) if the build runs over — it is the only optional subsystem. The DO kit (₱12–13k) is what pushes the full set past the ceiling, so it belongs in the last phase; the DO probe and the aerators are never cut.
+> 💰 **₱50,000 hardware ceiling:** the camera (#3) and its LM2596S module (#19) are the designated first cut (₱748) if the build runs over — it is the only optional subsystem. The DO kit (₱12–13k) is what pushes the full set past the ceiling, so it belongs in the last phase; the DO probe and the aerators are never cut.
 >
 > **Where the money actually goes:** solar generation costs ₱0 here — the household already supplies it, so the power category is only the AC drop, its protection and the 12 V supply (₱2,900–4,600). Two items now dominate: the DO kit (#8) at ₱12,000–13,199 and the EC sensor (#5) at ₱5,489 — together ₱17,500–18,700. The old #1 spend, the LoRaWAN gateway (₱10,645), is gone: the entire radio stack (3 × ESP32 + E22-900M22S + antenna) now costs ~₱2,500. The high end of every range assumes the most expensive listing; the low ends are real listings linked in each row.
 
-> **Which items belong to which phase** (per-phase costs are in the README's BOM & Budget section): ① bench — ESP32 ×2 (#1) + E22-900M22S/antenna ×2 (#2) — the float node plus a bench partner node — DS18B20 (#7), relay module (#4), one bilge pump (#11), selector + LEDs (#29–30) · ② dashboard — house bridge node (1 × ESP32 #1 + E22-900M22S/antenna #2), EC sensor (#5), refractometer (#27), EC standards (#24) · ③ power to the float — AC drop (#12), RCD (#13), 12V 30A PSU (#14), AC-fail module (#20), buck (#19), fuses (#21), glands (#22) · ④ full feature set — DO (#8), pH (#6) + buffers (#23), camera (#3), second bilge pump (#11), boxes (#15), frame + netting + shade (#17), pontoons (#16), misc hardware (#18), pipe grid + hose + sensor hub (#31–33), air pumps and stones (#9–10), brine reserve (#28), DO membranes (#25), KCl (#26).
+> **Which items belong to which phase** (per-phase costs are in the README's BOM & Budget section): ① bench — ESP32 ×2 (#1) + E22-900M22S/antenna ×2 (#2) — the float node plus a bench partner node — DS18B20 (#7), relay module (#4), one bilge pump (#11), selector + LEDs (#29–30) · ② dashboard — house bridge node (1 × ESP32 #1 + E22-900M22S/antenna #2), EC sensor (#5), refractometer (#27), EC standards (#24) · ③ power to the float — AC drop (#12), RCD (#13), 12V 30A PSU (#14), LM2596S module (#19), fuses (#21), glands (#22) · ④ full feature set — DO (#8), pH (#6) + buffers (#23), camera (#3), second bilge pump (#11), boxes (#15), frame + netting + shade (#17), pontoons (#16), misc hardware (#18), pipe grid + hose + sensor hub (#31–33), air pumps and stones (#9–10), brine reserve (#28), DO membranes (#25), KCl (#26).
 
 ### 🎯 ₱50,000-capped build
 
@@ -199,16 +198,16 @@ Apply these cuts in order until the running total is under ₱50,000:
 
 | Order | Cut | Saves | What you give up |
 |-------|-----|-------|------------------|
-| 1 | Camera #3 + its buck #19 | ₱705–769 | Overhead monitoring → visual checks during pond visits. Nothing else depends on it |
+| 1 | Camera #3 + LM2596S module #19 | ₱748 | Overhead monitoring → visual checks during pond visits. Nothing else depends on it |
 | 2 | DO kit #8 + membranes #25 | ₱12,500–14,199 | The DO trigger. Until the probe is bought, run night aeration on a fixed schedule (e.g. 30 min on / 30 min off) and keep the temperature + salinity logic |
 | 3 | Dev/spare node set (1 × ESP32 #1 + E22-900M22S/antenna #2) | ₱838 | No hot spare if the controller dies mid-defense |
 | 4 | Second bilge pump #11 | ~₱649 | Two-zone salinity correction becomes single-zone (one grid half) |
 | 5 | pH kit #6 + buffers #23 | ₱1,670 | pH monitoring; the NH₃ estimate loses its pH input |
 
-**With cuts 1–2 applied** (the configuration that fits the ceiling): boards ₱2,787 · sensors ₱7,042 · aeration ₱3,298–3,998 · power ₱2,900–4,600 · structure ₱11,192–16,692 · protection & calibration ₱2,853–4,195 · control interface ₱200–400 · distribution & hub ₱2,300–4,800 → **≈ ₱32,550–44,500**.
+**With cuts 1–2 applied** (the configuration that fits the ceiling): boards ₱2,787 · sensors ₱7,042 · aeration ₱3,688 · power ₱2,900–4,600 · structure ₱18,264–21,264 · protection & calibration ₱3,352–5,044 · control interface ₱200–400 · distribution & hub ₱2,300–4,800 → **≈ ₱39,934–48,526**.
 
-**With cuts 1–5 applied:** **≈ ₱29,300–41,100** (the ₱338 1100 GPH bilge listing, 4.6★, becomes the single pump).
+**With cuts 1–5 applied:** **≈ ₱36,777–45,369** (the ₱338 1100 GPH bilge listing, 4.6★, becomes the single pump).
 
 > The high ends assume the most expensive listing on every line, so the cap is held by **sourcing** as much as by scope: buy the low-end listings linked in each row and re-check the running total before each phase.
 
-**Never cut:** the air pumps and stones (#9–10), the power chain and its protection (#12–14, #20–22), the boxes and pontoons (#15–16), the EC sensor (#5 — it is the rain-dilution trigger) and the brine reserve (#28). These keep the crabs alive and drive the automated first-aid demo.
+**Never cut:** the air pumps and stones (#9–10), the power chain and its protection (#12–14, #21–22), the boxes and pontoons (#15–16), the EC sensor (#5 — it is the rain-dilution trigger) and the brine reserve (#28). These keep the crabs alive and drive the automated first-aid demo.

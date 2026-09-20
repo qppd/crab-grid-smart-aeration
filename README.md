@@ -157,11 +157,11 @@ The prototype is powered from the **household's existing solar installation** (2
 |-----------|--------------|
 | **AC Source** | 220V AC drop from the household solar system (array + **>600 Ah** battery bank + inverter) — available 24/7 |
 | **AC Protection** | 30 mA RCD/GFCI + 2-pole breaker at the house end; outdoor-rated earthed cable (2.5 mm²) run overhead or in conduit; IP67/IP68 weatherproof connectors, drip loops, no submerged joints, monthly RCD test, and licensed-electrician commissioning. |
-| **On-Site DC Supply** | 12V 30A (360 W) switching PSU → pumps, relay module, controller; 12V→5V buck for the camera node. Treat 30A and the branch fuses as provisional until pump nameplate current, inrush, conductor ampacity, and voltage drop are measured and signed off. |
+| **On-Site DC Supply** | 12V 30A (360 W) switching PSU → pumps, relay module, controller; LM2596S 24V/12V → 5V USB step-down module for the camera node. Treat 30A and the branch fuses as provisional until pump nameplate current, inrush, conductor ampacity, and voltage drop are measured and signed off. |
 
 **Night load:** the planning estimate is ~50–60 W (≈ 5 A at 12 V) for aeration, but verify the actual pump duty cycle and inverter losses before relying on the household bank. The full ⚡ Power Budget is in [`docs/BOM.md`](docs/BOM.md).
 
-> ⚠️ **Single point of failure:** no on-site battery, so a tripped breaker or a cut cable stops aeration. The house bridge must alarm on heartbeat loss. An AC-fail GPIO on the float cannot transmit after the same AC feed has killed its ESP32; use a local UPS/supercapacitor only if a last-gasp packet is required.
+> ⚠️ **Single point of failure:** no on-site battery, so a tripped breaker or a cut cable stops aeration. The house bridge must alarm on heartbeat loss; use a local UPS/supercapacitor only if a last-gasp packet or unattended-night runtime is required.
 
 ---
 
@@ -194,23 +194,23 @@ Rules the firmware enforces:
 
 ## BOM & Budget
 
-Every part, price, product link and rating lives in [`docs/BOM.md`](docs/BOM.md), together with the compatibility verification and the power budget. Headline totals: **Tier 1 sensors ≈ ₱32,350–44,900**; **full sensor set ≈ ₱45,750–59,500** (per-category ranges are in the BOM).
+Every part, price, product link and rating lives in [`docs/BOM.md`](docs/BOM.md), together with the compatibility verification and the power budget. Headline totals: **Tier 1 sensors ≈ ₱39,787–48,879**; **full sensor set ≈ ₱53,182–63,473** (per-category ranges are in the BOM).
 
-Purchase is phased to match the thesis timeline — the four phases add up to the build total above (≈ **₱45,750–59,500** at item prices):
+Purchase is phased to match the thesis timeline — the four phases add up to the build total above (≈ **₱53,182–63,473** at item prices):
 
-### Phase 1 — Bench Testing (~₱2,950–3,150)
+### Phase 1 — Bench Testing (~₱2,906)
 2 × ESP32 DevKit + 2 × E22-900M22S/915 MHz antenna + DS18B20 + relay module + one bilge pump + the AUTO/OFF/MANUAL selector → build & test the control loop and the LoRa link on the bench (12V from a lab supply, or buy the on-site PSU now).
 
-### Phase 2 — Remote Dashboard (~₱7,000–7,400)
+### Phase 2 — Remote Dashboard (~₱7,127–7,727)
 House bridge node (ESP32 + E22-900M22S) + EC/salinity sensor + refractometer + calibration standard → close the remote monitoring loop.
 
-### Phase 3 — Power to the Float (~₱3,200–5,200)
-Protected 220V AC drop from the house (30 mA RCD + breaker) + 12V 30A DC supply + heartbeat/AC-fail detection + fuses/glands → run the float off the household solar system. A licensed electrician must install and commission the mains side.
+### Phase 3 — Power to the Float (~₱3,127–4,969)
+Protected 220V AC drop from the house (30 mA RCD + breaker) + 12V 30A DC supply + LM2596S camera module + fuses/glands → run the float off the household solar system. A licensed electrician must install and commission the mains side.
 
-### Phase 4 — Full Feature Set (~₱32,500–43,400)
-DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump + fattening boxes + frame/netting + foam pontoons + the PVC air/water grid + sensor hub + air pumps + misc hardware + a controlled salinity-test setup → complete system before panel defense. Open-water brine correction is not a guaranteed feature.
+### Phase 4 — Full Feature Set (~₱34,850–46,400)
+DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump + fattening boxes + frame/netting + **4× round foam floats 50×90** + the PVC air/water grid + sensor hub + air pumps + misc hardware + a controlled salinity-test setup → complete system before panel defense. Open-water brine correction is not a guaranteed feature.
 
-> 💰 **₱50,000 hardware ceiling:** if the build runs over, the **camera is the first cut** — #3 plus its buck (#19) is ≈ ₱705–769. The DO kit (₱12–13k) is what pushes the full set past the ceiling, so it belongs in the last phase. The BOM carries the full cut order and the resulting **₱32,550–44,500** configuration; the DO probe and the aerators are never cut. The brine reserve is only retained for a controlled salinity experiment, not as proof of open-water correction.
+> 💰 **₱50,000 hardware ceiling:** if the build runs over, the **camera is the first cut** — #3 plus its LM2596S module (#19) is ₱748. The DO kit (₱12–13k) is what pushes the full set past the ceiling, so it belongs in the last phase. The BOM carries the full cut order and the resulting **₱39,934–48,526** configuration; the DO probe and the aerators are never cut. The brine reserve is only retained for a controlled salinity experiment, not as proof of open-water correction.
 
 ---
 

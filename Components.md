@@ -49,7 +49,7 @@
 | pH analog output (via 10 kΩ series + 18 kΩ shunt divider, or ADS1115) | 34 | **ADC1** — works with WiFi on; input-only pin. 5 V → about 3.21 V with the passive divider; use a common ground and, preferably, an external 16-bit I2C ADC for thesis-grade pH. |
 | EC/salinity analog output | 35 | **ADC1** — input-only |
 | DO sensor analog output | 36 (VP) | **ADC1** — input-only |
-| AC-fail detection module | 39 (VN) | Digital input; input-only |
+
 | Relay 1 — air pump 1 | 25 | Non-strapping output; firmware drives HIGH (relay OFF) before init |
 | Relay 2 — air pump 2 | 27 | Same (digital output — the ADC2 restriction affects analog reads only) |
 | Relay 3 — bilge pump 1 | 33 | Non-strapping output; same boot practice |
