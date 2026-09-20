@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🦀 Solar Automated LoRa-Integrated Mud Crab Aeration Network with Crab Grid Observation
+# Solar Automated LoRa-Integrated Mud Crab Aeration Network with Crab Grid Observation
 
 A house-powered, remotely monitored smart aquaculture system for mud crab fattening in mangrove areas — combining physical crab separation, continuous water quality monitoring, automated aeration and alerts, LoRa remote control, and overhead visual security.
 
@@ -16,11 +16,11 @@ A house-powered, remotely monitored smart aquaculture system for mud crab fatten
 
 ---
 
-> 📚 **Where to find what:** this README = overview, architecture and timeline · [`Components.md`](Components.md) = engineering specs and validation rationale · [`docs/BOM.md`](docs/BOM.md) = prices, product links, compatibility verification and power budget.
+> **Where to find what:** this README = overview, architecture and timeline · [`Components.md`](docs/Components.md) = engineering specs and validation rationale · [`docs/BOM.md`](docs/BOM.md) = prices, product links, compatibility verification and power budget · [`SETUP.md`](docs/SETUP.md), [`WIRING.md`](docs/WIRING.md), [`FIRMWARE.md`](docs/FIRMWARE.md), [`TESTING.md`](docs/TESTING.md), [`CALIBRATION.md`](docs/CALIBRATION.md), [`TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) = builder guides · [`APP.md`](docs/APP.md) = dashboard webapp specification · [`SYSTEM-ARCHITECTURE.md`](docs/SYSTEM-ARCHITECTURE.md), [`BLOCK-DIAGRAM.md`](docs/BLOCK-DIAGRAM.md), [`FLOWCHART.md`](docs/FLOWCHART.md) = thesis diagrams (Mermaid) · [`STACKS.md`](docs/STACKS.md) = technology stack.
 
 ---
 
-## 📖 Table of Contents
+## Table of Contents
 
 - [About the Project](#about-the-project)
 - [Core Capabilities](#core-capabilities)
@@ -62,14 +62,14 @@ The prototype is powered from the **household's existing solar installation** (2
 
 ## Core Capabilities
 
-| # | Feature | Description |
-|---|---------|-------------|
-| 🛡️ | **Physical Protection** | Individual floating cages (horizontal crab fattening boxes) physically separate crabs to prevent cannibalism. |
-| 📊 | **Water Quality Sensing** | Continuous monitoring of dissolved oxygen, pH, temperature and salinity — plus a pH/temperature-derived ammonia toxicity-risk indicator. Absolute NH₃ concentration requires a TAN measurement or laboratory test. |
-| 🚨 | **Automated First Aid** | When conditions become dangerous, the system forces aeration, raises an alarm, and logs the event. Open-water salinity correction is not assumed; brine dosing is only valid in an isolated or closed-loop test enclosure. |
-| 🎛️ | **Manual & Automatic Control** | Runs itself in **AUTO** (firmware thresholds drive the pumps) and accepts **MANUAL** or **OFF** from the dashboard webapp, with a physical selector on the box as the fail-safe. |
-| 📡 | **Remote Monitoring & Control** | LoRa carries sensor data and pump commands to the house bridge node, which feeds the remote dashboard — even where there is no internet or Wi-Fi at the pond. |
-| 📷 | **Visual Security** | Overhead camera to monitor crab molting, deter animal predators, and spot human poachers. |
+| Feature | Description |
+|---------|-------------|
+| **Physical Protection** | Individual floating cages (horizontal crab fattening boxes) physically separate crabs to prevent cannibalism. |
+| **Water Quality Sensing** | Continuous monitoring of dissolved oxygen, pH, temperature and salinity — plus a pH/temperature-derived ammonia toxicity-risk indicator. Absolute NH₃ concentration requires a TAN measurement or laboratory test. |
+| **Automated First Aid** | When conditions become dangerous, the system forces aeration, raises an alarm, and logs the event. Open-water salinity correction is not assumed; brine dosing is only valid in an isolated or closed-loop test enclosure. |
+| **Manual & Automatic Control** | Runs itself in **AUTO** (firmware thresholds drive the pumps) and accepts **MANUAL** or **OFF** from the dashboard webapp, with a physical selector on the box as the fail-safe. |
+| **Remote Monitoring & Control** | LoRa carries sensor data and pump commands to the house bridge node, which feeds the remote dashboard — even where there is no internet or Wi-Fi at the pond. |
+| **Visual Security** | Overhead camera to monitor crab molting, deter animal predators, and spot human poachers. |
 
 ---
 
@@ -124,13 +124,13 @@ The prototype is powered from the **household's existing solar installation** (2
 | **Pond Area** | 500 sqm (modular conceptual prototype) |
 | **Capacity** | 8 individual fattening boxes on the pontoon grid, one crab per box (the anti-cannibalism constraint) |
 | **Boxes & frames** | Slotted plastic boxes, shaded under the frame; frame/gantry preferably UV-stabilized PVC/FRP, or marine-grade timber sealed with marine epoxy/PU and Grade 316/nylon fasteners |
-| **Floaters** | Ready-made foam-filled pontoon floats (×8–12), each with a manufacturer-rated buoyancy of at least 50 kg. Final sizing uses the measured dry above-water load and load distribution; water inside slotted cages is not counted as dead load while submerged. The PVC pipes are **conduit, never flotation**: water-filled pipe weighs ~1 kg per litre (see [Components.md](Components.md)). |
+| **Floaters** | Ready-made foam-filled pontoon floats (×8–12), each with a manufacturer-rated buoyancy of at least 50 kg. Final sizing uses the measured dry above-water load and load distribution; water inside slotted cages is not counted as dead load while submerged. The PVC pipes are **conduit, never flotation**: water-filled pipe weighs ~1 kg per litre (see [Components.md](docs/Components.md)). |
 | **Aeration** | 2 × RESUN MPQ-03 (MPQ-903) 12V air pumps (35W, 68 L/min open-flow, 6 outlets) + air stone per cage — regulate and measure the delivered flow. The biological target is approximately 4.8–6.4 L/min total for 320 L (1.5–2 L/min per 100 L), with N+1 redundancy. |
 | **Air & water routing** | Two separate circuits inside the PVC pipe grid: an air header with per-cage drop tubes and stones, and a water header fed by the bilge pumps with a valved outlet per cage. Flexible hose runs from pump to cage are an option/backup |
 | **Sensor hub** | Centred on the grid for balance and symmetric cable runs; probes at mid-depth (~20–30 cm), clear of the aerator plume. The DO probe must have gentle water movement across its membrane; one probe is a single-point risk, so use a handheld meter or scheduled aeration as a fallback. |
 | **Controller & Power** | Controller centred in the setup for optimal wiring. Powered by a 220V AC drop from the household solar system (24/7) → shore-end 30 mA RCD + 2-pole breaker → weatherproof feedthroughs → 12V 30A DC supply. The AC installation and conductor/fuse sizing require a licensed electrician and Philippine Electrical Code review. |
 
-> 📋 See [`Components.md`](Components.md) for the full component specifications and [`docs/BOM.md`](docs/BOM.md) for the detailed Bill of Materials with verified product links and pricing.
+> See [`Components.md`](docs/Components.md) for the full component specifications and [`docs/BOM.md`](docs/BOM.md) for the detailed Bill of Materials with verified product links and pricing.
 
 ---
 
@@ -159,9 +159,9 @@ The prototype is powered from the **household's existing solar installation** (2
 | **AC Protection** | 30 mA RCD/GFCI + 2-pole breaker at the house end; outdoor-rated earthed cable (2.5 mm²) run overhead or in conduit; IP67/IP68 weatherproof connectors, drip loops, no submerged joints, monthly RCD test, and licensed-electrician commissioning. |
 | **On-Site DC Supply** | 12V 30A (360 W) switching PSU → pumps, relay module, controller; LM2596S 24V/12V → 5V USB step-down module for the camera node. Treat 30A and the branch fuses as provisional until pump nameplate current, inrush, conductor ampacity, and voltage drop are measured and signed off. |
 
-**Night load:** the planning estimate is ~50–60 W (≈ 5 A at 12 V) for aeration, but verify the actual pump duty cycle and inverter losses before relying on the household bank. The full ⚡ Power Budget is in [`docs/BOM.md`](docs/BOM.md).
+**Night load:** the planning estimate is ~50–60 W (≈ 5 A at 12 V) for aeration, but verify the actual pump duty cycle and inverter losses before relying on the household bank. The full Power Budget is in [`docs/BOM.md`](docs/BOM.md).
 
-> ⚠️ **Single point of failure:** no on-site battery, so a tripped breaker or a cut cable stops aeration. The house bridge must alarm on heartbeat loss; use a local UPS/supercapacitor only if a last-gasp packet or unattended-night runtime is required.
+> **Single point of failure:** no on-site battery, so a tripped breaker or a cut cable stops aeration. The house bridge must alarm on heartbeat loss; use a local UPS/supercapacitor only if a last-gasp packet or unattended-night runtime is required.
 
 ---
 
@@ -210,7 +210,7 @@ Protected 220V AC drop from the house (30 mA RCD + breaker) + 12V 30A DC supply 
 ### Phase 4 — Full Feature Set (~₱34,850–46,400)
 DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump + fattening boxes + frame/netting + **4× round foam floats 50×90** + the PVC air/water grid + sensor hub + air pumps + misc hardware + a controlled salinity-test setup → complete system before panel defense. Open-water brine correction is not a guaranteed feature.
 
-> 💰 **₱50,000 hardware ceiling:** if the build runs over, the **camera is the first cut** — #3 plus its LM2596S module (#19) is ₱748. The DO kit (₱12–13k) is what pushes the full set past the ceiling, so it belongs in the last phase. The BOM carries the full cut order and the resulting **₱39,934–48,526** configuration; the DO probe and the aerators are never cut. The brine reserve is only retained for a controlled salinity experiment, not as proof of open-water correction.
+> **₱50,000 hardware ceiling:** if the build runs over, the **camera is the first cut** — #3 plus its LM2596S module (#19) is ₱748. The DO kit (₱12–13k) is what pushes the full set past the ceiling, so it belongs in the last phase. The BOM carries the full cut order and the resulting **₱39,934–48,526** configuration; the DO probe and the aerators are never cut. The brine reserve is only retained for a controlled salinity experiment, not as proof of open-water correction.
 
 ---
 
@@ -229,8 +229,8 @@ DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump +
 1. **Scaffold the floating grid** on foam-filled pontoon floats, with the frame and gantry in UV-stabilized PVC/FRP or properly sealed marine-grade material; use Grade 316 stainless or nylon fasteners in brackish water.
 2. **Mount the 8 fattening boxes** on the grid, one crab per box, shaded from direct sun.
 3. **Position the controller node** (ESP32 + E22-900M22S) in the centre of the setup in an IP65 enclosure.
-4. **Connect the sensors** to the ESP32 ADC/GPIO pins per the pin map in [`Components.md`](Components.md). For the minimum pH divider use 10 kΩ series + 18 kΩ shunt (5 V → about 3.21 V); for thesis-grade pH, use an ADS1115 I2C ADC and 3.3 V level shifting.
-5. **Wire the relay module** to the air pumps and bilge pumps, following the WiFi/boot-safe pin map in [`Components.md`](Components.md) (no analog on ADC2 pins while WiFi runs, nothing on boot-strap pins 0/12/15).
+4. **Connect the sensors** to the ESP32 ADC/GPIO pins per the pin map in [`Components.md`](docs/Components.md). For the minimum pH divider use 10 kΩ series + 18 kΩ shunt (5 V → about 3.21 V); for thesis-grade pH, use an ADS1115 I2C ADC and 3.3 V level shifting.
+5. **Wire the relay module** to the air pumps and bilge pumps, following the WiFi/boot-safe pin map in [`Components.md`](docs/Components.md) (no analog on ADC2 pins while WiFi runs, nothing on boot-strap pins 0/12/15).
 6. **Run the power drop** — 220V AC from the house (30 mA RCD + breaker at the house end, weatherproof IP67/IP68 terminations, drip loops, no submerged joints) → 12V 30A DC supply on the float → fused distribution. Have a licensed electrician verify conductor size, earthing, breaker coordination and Philippine Electrical Code compliance.
 7. **Calibrate before trusting any reading** — 2-point pH (4.01 / 6.86), EC with 1.413 mS/cm and 12.88 mS/cm standards following the sensor procedure, and cross-check salinity with the refractometer. Treat 12.88 mS/cm as a conductivity standard, not as 35 ppt seawater.
 
@@ -258,21 +258,32 @@ DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump +
 
 ```
 crab-grid-smart-aeration/
-├── README.md              # This file
-├── Components.md          # Full components specification list
+├── README.md              # This file — start here
 ├── LICENSE                # MIT License
 ├── .gitignore
-├── docs/                  # Documentation
-│   ├── BOM.md             # Bill of Materials — product links, ratings, prices
-│   ├── architecture.md    # ⏳ planned
-│   ├── wiring-diagrams/   # ⏳ planned
-│   └── images/            # ⏳ planned
-├── firmware/              # ⏳ planned — ESP32 source code
-│   ├── main_controller/  # ⏳ planned — ESP32+E22-900M22S sensor + LoRa firmware
-│   ├── house_bridge/     # ⏳ planned — LoRa ⇄ WiFi relay node firmware
-│   └── camera_node/      # ⏳ planned — ESP32-CAM streaming firmware
-└── dashboard/            # ⏳ planned — Next.js + Realtime Database webapp
-⏳ = planned / not yet in the repository — create each item as its roadmap phase completes.
+├── docs/                   # Documentation and builder guides
+│   ├── Components.md      # Engineering specs and validation rationale
+│   ├── HARDWARE.md        # Hardware guide (specs, pin map, BOM mirror)
+│   ├── BOM.md             # Bill of Materials — prices, product links, ratings
+│   ├── SETUP.md           # Environment, accounts and first power-up
+│   ├── WIRING.md          # Assembly, wiring and verified ESP32 pin map
+│   ├── FIRMWARE.md        # Firmware architecture and packet protocol
+│   ├── TESTING.md         # Test plan and acceptance criteria
+│   ├── CALIBRATION.md     # Sensor calibration procedures
+│   ├── TROUBLESHOOTING.md # Fault isolation guide
+│   ├── APP.md             # Dashboard webapp specification
+│   ├── SYSTEM-ARCHITECTURE.md # Thesis system architecture diagram (Mermaid)
+│   ├── BLOCK-DIAGRAM.md   # Thesis hardware block diagram (Mermaid)
+│   ├── FLOWCHART.md       # Thesis operational flowchart (Mermaid)
+│   ├── STACKS.md          # Technology stack reference
+│   └── images/            # planned
+├── firmware/              # planned — ESP32 source code
+│   ├── main_controller/  # planned — ESP32+E22-900M22S sensor + LoRa firmware
+│   ├── house_bridge/     # planned — LoRa ⇄ WiFi relay node firmware
+│   └── camera_node/      # planned — ESP32-CAM streaming firmware
+└── dashboard/            # planned — Next.js + Realtime Database webapp
+
+Items marked "planned" are not yet in the repository — create each item as its roadmap phase completes.
 ```
 
 ---
@@ -333,6 +344,6 @@ Project Link: [https://github.com/qppd/crab-grid-smart-aeration](https://github.
 
 <div align="center">
 
-**Built with ❤️ for sustainable aquaculture**
+**Built with love for sustainable aquaculture**
 
 </div>
