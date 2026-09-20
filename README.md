@@ -6,7 +6,7 @@ A house-powered, remotely monitored smart aquaculture system for mud crab fatten
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform: ESP32](https://img.shields.io/badge/Platform-ESP32-red.svg)](https://www.espressif.com/)
-[![LoRa: 433 MHz P2P](https://img.shields.io/badge/LoRa-433%20MHz%20P2P-green.svg)](#electronics--hardware)
+[![LoRa: 915 MHz P2P](https://img.shields.io/badge/LoRa-915%20MHz%20P2P-green.svg)](#electronics--hardware)
 [![Power: 220V AC from House Solar](https://img.shields.io/badge/Power-220V%20AC%20from%20House%20Solar-yellow.svg)](#power-system)
 [![Status: In Development](https://img.shields.io/badge/Status-In%20Development-orange.svg)]()
 
@@ -83,12 +83,12 @@ The prototype is powered from the **household's existing solar installation** (2
                                            │ Internet / WiFi
                                            │
                             ┌──────────────┴──────────────────────┐
-                            │  House Bridge Node (ESP32 + RA-02)  │
+                            │  House Bridge Node (ESP32 + E22)    │
                             │  at the house, where WiFi exists    │
                             └──────────────┬──────────────────────┘
-                                           │ LoRa (433 MHz, P2P)
+                                           │ LoRa (915 MHz, P2P)
                             ┌──────────────┴──────────────────────┐
-                            │   ESP32 DevKit + RA-02 (SX1278)     │
+                            │   ESP32 DevKit + E22 (SX1262)       │
                             │       — Main Controller Node        │
                             └──┬─────┬──────┬──────┬──────┬───────┘
                                │     │      │      │      │
@@ -123,7 +123,7 @@ The prototype is powered from the **household's existing solar installation** (2
 |---------------|--------|
 | **Pond Area** | 500 sqm (modular conceptual prototype) |
 | **Capacity** | 8 individual fattening boxes on the pontoon grid, one crab per box (the anti-cannibalism constraint) |
-| **Boxes & frames** | Slotted plastic boxes, shaded under the frame; frame/gantry in bamboo or marine plywood so no bare plastic sits in direct sun |
+| **Boxes & frames** | Slotted plastic boxes, shaded under the frame; frame/gantry preferably UV-stabilized PVC/FRP, or marine-grade timber sealed with marine epoxy/PU and Grade 316/nylon fasteners |
 | **Floaters** | Ready-made foam-filled pontoon floats (×8–12), each with a manufacturer-rated buoyancy of at least 50 kg. Final sizing uses the measured dry above-water load and load distribution; water inside slotted cages is not counted as dead load while submerged. The PVC pipes are **conduit, never flotation**: water-filled pipe weighs ~1 kg per litre (see [Components.md](Components.md)). |
 | **Aeration** | 2 × 12V DC air pumps (30–60 L/min rated open-flow, multi-outlet) + air stone per cage — regulate and measure the delivered flow. The biological target is approximately 4.8–6.4 L/min total for 320 L (1.5–2 L/min per 100 L), with N+1 redundancy. |
 | **Air & water routing** | Two separate circuits inside the PVC pipe grid: an air header with per-cage drop tubes and stones, and a water header fed by the bilge pumps with a valved outlet per cage. Flexible hose runs from pump to cage are an option/backup |
@@ -138,8 +138,8 @@ The prototype is powered from the **household's existing solar installation** (2
 
 | Component | Specification | Purpose |
 |-----------|--------------|---------|
-| **ESP32 DevKit 38-pin + RA-02 (SX1278)** | ESP32-WROOM-32 + 433 MHz LoRa; SX1278 can use RFO (up to +14 dBm) or PA_BOOST (up to +20 dBm with the correct module matching network) | Main controller node — reads all sensors, runs automation logic, communicates over point-to-point LoRa. Verify the RA-02 RF path, measured EIRP, and NTC authorization before deployment. |
-| **House Bridge Node (ESP32 + RA-02)** | Same radio stack, at the house | LoRa ⇄ WiFi bridge — pushes float telemetry to the Firebase dashboard and relays dashboard commands back down over LoRa |
+| **ESP32 DevKit 38-pin + EBYTE E22-900M22S (SX1262)** | ESP32-WROOM-32 + 915 MHz LoRa (SX1262, up to +22 dBm) | Main controller node — reads all sensors, runs automation logic, communicates over point-to-point LoRa on the 915 MHz ISM band. Verify measured EIRP and NTC type-approval before deployment. |
+| **House Bridge Node (ESP32 + E22-900M22S)** | Same radio stack, at the house | LoRa ⇄ WiFi bridge — pushes float telemetry to the Firebase dashboard and relays dashboard commands back down over LoRa |
 | **ESP32-CAM** | OV2640, WiFi/BT | Overhead camera node for visual monitoring |
 | **8-Channel Relay Module** | 12V coil, optocoupler, low-level trigger | Drives aerators and salinity pumps with spare channels |
 | **DFRobot EC/Salinity Sensor** | K=10, 0–100 mS/cm | Measures conductivity/salinity. Use the manufacturer/PSS-78 conversion rather than a fixed 0.66 ppt-per-mS/cm rule; 35 ppt seawater is approximately 53 mS/cm at 25 °C. |
@@ -168,7 +168,7 @@ The prototype is powered from the **household's existing solar installation** (2
 ## Software & Firmware
 
 - **Microcontroller Firmware:** ESP32 (Arduino/PlatformIO) — sensor reading, LoRa P2P communication, relay control
-- **LoRa Link:** point-to-point 433 MHz between the float node and the house bridge node — no LoRaWAN server (TTN/ChirpStack) needed. Confirm the exact NTC operating conditions and keep a pin-compatible 915 MHz fallback if 433 MHz authorization is not documented.
+- **LoRa Link:** point-to-point 915 MHz (E22-900M22S / SX1262) between the float node and the house bridge node — no LoRaWAN server (TTN/ChirpStack) needed. 915 MHz is the Philippine NTC licence-free SRD band for this low-duty telemetry; confirm maximum EIRP and type-approval before deployment.
 - **Dashboard:** a **Next.js + Firebase (Realtime Database + Auth)** webapp — the house bridge node writes sensor data into the Realtime Database, and dashboard commands are read back and relayed down over LoRa
 - **Camera:** WiFi-based streaming from ESP32-CAM (local AP during pond visits)
 
@@ -194,15 +194,15 @@ Rules the firmware enforces:
 
 ## BOM & Budget
 
-Every part, price, product link and rating lives in [`docs/BOM.md`](docs/BOM.md), together with the compatibility verification and the power budget. Headline totals: **Tier 1 sensors ≈ ₱32,200–44,600**; **full sensor set ≈ ₱45,600–59,200** (per-category ranges are in the BOM).
+Every part, price, product link and rating lives in [`docs/BOM.md`](docs/BOM.md), together with the compatibility verification and the power budget. Headline totals: **Tier 1 sensors ≈ ₱32,350–44,900**; **full sensor set ≈ ₱45,750–59,500** (per-category ranges are in the BOM).
 
-Purchase is phased to match the thesis timeline — the four phases add up to the build total above (≈ **₱45,600–59,200** at item prices):
+Purchase is phased to match the thesis timeline — the four phases add up to the build total above (≈ **₱45,750–59,500** at item prices):
 
 ### Phase 1 — Bench Testing (~₱2,950–3,150)
-2 × ESP32 DevKit + 2 × RA-02/antenna + DS18B20 + relay module + one bilge pump + the AUTO/OFF/MANUAL selector → build & test the control loop and the LoRa link on the bench (12V from a lab supply, or buy the on-site PSU now).
+2 × ESP32 DevKit + 2 × E22-900M22S/915 MHz antenna + DS18B20 + relay module + one bilge pump + the AUTO/OFF/MANUAL selector → build & test the control loop and the LoRa link on the bench (12V from a lab supply, or buy the on-site PSU now).
 
 ### Phase 2 — Remote Dashboard (~₱7,000–7,400)
-House bridge node (ESP32 + RA-02) + EC/salinity sensor + refractometer + calibration standard → close the remote monitoring loop.
+House bridge node (ESP32 + E22-900M22S) + EC/salinity sensor + refractometer + calibration standard → close the remote monitoring loop.
 
 ### Phase 3 — Power to the Float (~₱3,200–5,200)
 Protected 220V AC drop from the house (30 mA RCD + breaker) + 12V 30A DC supply + heartbeat/AC-fail detection + fuses/glands → run the float off the household solar system. A licensed electrician must install and commission the mains side.
@@ -210,7 +210,7 @@ Protected 220V AC drop from the house (30 mA RCD + breaker) + 12V 30A DC supply 
 ### Phase 4 — Full Feature Set (~₱32,500–43,400)
 DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump + fattening boxes + frame/netting + foam pontoons + the PVC air/water grid + sensor hub + air pumps + misc hardware + a controlled salinity-test setup → complete system before panel defense. Open-water brine correction is not a guaranteed feature.
 
-> 💰 **₱50,000 hardware ceiling:** if the build runs over, the **camera is the first cut** — #3 plus its buck (#19) is ≈ ₱705–769. The DO kit (₱12–13k) is what pushes the full set past the ceiling, so it belongs in the last phase. The BOM carries the full cut order and the resulting **₱32,400–44,200** configuration; the DO probe and the aerators are never cut. The brine reserve is only retained for a controlled salinity experiment, not as proof of open-water correction.
+> 💰 **₱50,000 hardware ceiling:** if the build runs over, the **camera is the first cut** — #3 plus its buck (#19) is ≈ ₱705–769. The DO kit (₱12–13k) is what pushes the full set past the ceiling, so it belongs in the last phase. The BOM carries the full cut order and the resulting **₱32,550–44,500** configuration; the DO probe and the aerators are never cut. The brine reserve is only retained for a controlled salinity experiment, not as proof of open-water correction.
 
 ---
 
@@ -220,15 +220,15 @@ DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump +
 
 - [Arduino IDE](https://www.arduino.cc/en/software) or [PlatformIO](https://platformio.org/)
 - ESP32 board package (esp32 by Espressif)
-- `sandeepmistry/LoRa` library (SX1278/RA-02) · `OneWire` / `DallasTemperature` (DS18B20) · `DFRobot_EC` / `DFRobot_pH` (DFRobot sensors)
-- 3 × ESP32 DevKit 38-pin + 3 × RA-02 + antennas (float node, house bridge, spare — see [`docs/BOM.md`](docs/BOM.md) §1)
+- `RadioLib` (LoRa/SX1262 driver for the E22-900M22S) · `OneWire` / `DallasTemperature` (DS18B20) · `DFRobot_EC` / `DFRobot_pH` (DFRobot sensors)
+- 3 × ESP32 DevKit 38-pin + 3 × E22-900M22S + 915 MHz antennas (float node, house bridge, spare — see [`docs/BOM.md`](docs/BOM.md) §1)
 - pH/EC calibration standards and a handheld refractometer (see [`docs/BOM.md`](docs/BOM.md) §6)
 
 ### Hardware Setup
 
 1. **Scaffold the floating grid** on foam-filled pontoon floats, with the frame and gantry in UV-stabilized PVC/FRP or properly sealed marine-grade material; use Grade 316 stainless or nylon fasteners in brackish water.
 2. **Mount the 8 fattening boxes** on the grid, one crab per box, shaded from direct sun.
-3. **Position the controller node** (ESP32 + RA-02) in the centre of the setup in an IP65 enclosure.
+3. **Position the controller node** (ESP32 + E22-900M22S) in the centre of the setup in an IP65 enclosure.
 4. **Connect the sensors** to the ESP32 ADC/GPIO pins per the pin map in [`Components.md`](Components.md). For the minimum pH divider use 10 kΩ series + 18 kΩ shunt (5 V → about 3.21 V); for thesis-grade pH, use an ADS1115 I2C ADC and 3.3 V level shifting.
 5. **Wire the relay module** to the air pumps and bilge pumps, following the WiFi/boot-safe pin map in [`Components.md`](Components.md) (no analog on ADC2 pins while WiFi runs, nothing on boot-strap pins 0/12/15).
 6. **Run the power drop** — 220V AC from the house (30 mA RCD + breaker at the house end, weatherproof IP67/IP68 terminations, drip loops, no submerged joints) → 12V 30A DC supply on the float → fused distribution. Have a licensed electrician verify conductor size, earthing, breaker coordination and Philippine Electrical Code compliance.
@@ -238,10 +238,10 @@ DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump +
 
 1. Create the `firmware/` directory (planned — see [Project Structure](#project-structure)) and open it in Arduino IDE or PlatformIO.
 2. Install required libraries:
-   - `LoRa` by sandeepmistry (RA-02 / SX1278, the standard 18/19/23/5/14/26 SPI pin set)
+   - `RadioLib` (SX1262 — the E22-900M22S needs RadioLib's SX126x driver; SPI SCK 18/MISO 19/MOSI 23/NSS 5, RST 14, DIO1 26, BUSY 17)
    - `OneWire` / `DallasTemperature` (DS18B20)
    - `DFRobot_EC` / `DFRobot_pH` (DFRobot sensors)
-3. Configure the radio settings identically on every node (433 MHz, SF10–12, matching bandwidth/coding rate/sync word). Record the configured RF path and measured output/EIRP; do not assume a regulatory allowance without an NTC citation.
+3. Configure the radio settings identically on every node (915 MHz, SF9–12, matching bandwidth/coding rate/sync word). Record the configured output/EIRP and confirm NTC type-approval for the 915 MHz SRD band.
 4. WiFi stays **off** on the float node; only the house bridge joins the network.
 5. Upload the firmware to each ESP32. Implement the device-ID/sequence/CRC-8 packet, ACK/NAK, 60-second heartbeat, immediate DO emergency uplink, and 5-minute MANUAL auto-revert before any life-support test.
 
@@ -268,7 +268,7 @@ crab-grid-smart-aeration/
 │   ├── wiring-diagrams/   # ⏳ planned
 │   └── images/            # ⏳ planned
 ├── firmware/              # ⏳ planned — ESP32 source code
-│   ├── main_controller/  # ⏳ planned — ESP32+RA-02 sensor + LoRa firmware
+│   ├── main_controller/  # ⏳ planned — ESP32+E22-900M22S sensor + LoRa firmware
 │   ├── house_bridge/     # ⏳ planned — LoRa ⇄ WiFi relay node firmware
 │   └── camera_node/      # ⏳ planned — ESP32-CAM streaming firmware
 └── dashboard/            # ⏳ planned — Next.js + Realtime Database webapp
@@ -295,7 +295,7 @@ All system-level checks, with their verdicts, are in [`docs/BOM.md`](docs/BOM.md
 
 - [x] Concept definition and documentation
 - [x] Component selection and BOM verification
-- [ ] Phase 1: Bench testing with ESP32 + RA-02 + basic sensors
+- [ ] Phase 1: Bench testing with ESP32 + E22-900M22S + basic sensors
 - [ ] Phase 2: House bridge node integration and remote dashboard
 - [ ] Phase 3: Power to the float (AC drop from household solar + 12V DC supply)
 - [ ] Phase 4: Full feature set (DO, pH, camera, boxes)

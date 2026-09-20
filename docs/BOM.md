@@ -9,12 +9,12 @@
 
 ## 1. Boards & Connectivity
 
-> 🔴 **Changed Sept 2026 — LoRaWAN → plain point-to-point LoRa, and Heltec → budget ESP32 (₱10,645+ saved).** The RAK7268 LoRaWAN gateway and 2 × Heltec V3 (≈ ₱14,600) are replaced by **3 × ESP32 DevKit (₱349) + 3 × EBYTE RA-02 SX1278 (₱389) + 3 × antenna (₱100)** ≈ ₱2,500 for three node sets (float node, house bridge, dev/spare). Same radio physics, no TTN/ChirpStack subscription-server dependency, and every part is stocked at Makerlab PH. Full verified listing: [makerlab.ph](https://makerlab.ph/) (search "esp32", "lora").
+> 🔴 **Changed Sept 2026 — LoRaWAN → plain point-to-point LoRa, and Heltec → budget ESP32 (₱10,645+ saved).** The RAK7268 LoRaWAN gateway and 2 × Heltec V3 (≈ ₱14,600) are replaced by **3 × ESP32 DevKit (₱349) + 3 × EBYTE E22-900M22S SX1262 (₱389) + 3 × 915 MHz antenna (₱100)** ≈ ₱2,500 for three node sets (float node, house bridge, dev/spare). Same radio physics, no TTN/ChirpStack subscription-server dependency, and every part is stocked at Makerlab PH. Full verified listing: [makerlab.ph](https://makerlab.ph/) (search "esp32", "lora").
 
 | # | Item | Qty | Est. Price | Rating (verified) | URL | Why compatible |
 |---|------|-----|-----------|-------------------|-----|----------------|
 | 1 | **ESP32 DevKit, 38-pin (ESP32-WROOM-32)** — main controller node (float) | 3 (float node + house bridge + spare/dev) | ₱349 ea | Makerlab PH — in stock | [Makerlab: Type-C ESP32 30/38-pin](https://makerlab.ph/search?q=esp32) · alt ₱350: [30/38-pin board](https://makerlab.ph/search?q=esp32) | WiFi+BT MCU reads all analog/digital water sensors; 3.3V logic — sensor boards below output ≤3.4V ✔; WiFi stays OFF on the float. **Pin map avoids all WiFi (ADC2) and boot-strap conflicts — see [Components.md](../Components.md) §Controller pin map** |
-| 2 | **EBYTE RA-02 (SX1278, 433 MHz) LoRa module + 433 MHz antenna (₱100 ea)** — one per node: float, house bridge, spare | 3 | ₱489 ea | Makerlab PH — in stock | [Makerlab: RA-02 SX1278](https://makerlab.ph/search?q=lora) · [433 MHz antenna](https://makerlab.ph/search?q=lora) | SPI wiring (SCK 18/MISO 19/MOSI 23/NSS 5/RST 14/DIO0 26 — the standard `LoRa.h` pin set). SX1278 RFO output is up to +14 dBm; PA_BOOST can reach up to +20 dBm only with the correct module RF path/matching network. Verify the actual RA-02 path, measured EIRP, and Philippine NTC authorization before claiming range or licence-free operation. Keep a 915 MHz pin-compatible fallback. 3.3V logic = direct ESP32 attach, no level shifter ✔. ⚠️ Never power the RA-02 without its antenna — instant PA damage |
+| 2 | **EBYTE E22-900M22S (SX1262, 915 MHz) LoRa module + 915 MHz antenna (₱100 ea)** — one per node: float, house bridge, spare | 3 | ₱489 ea (verify current listing) | Makerlab PH — search "lora" | [Makerlab: LoRa SX1262](https://makerlab.ph/search?q=lora) · [915 MHz antenna](https://makerlab.ph/search?q=lora) | SPI wiring (SCK 18/MISO 19/MOSI 23/NSS 5, RST 14, **DIO1 26, BUSY 17**) — SX1262 needs a BUSY pin, not DIO0. SX1262 delivers up to +22 dBm on the 915 MHz PH licence-free SRD band. Confirm measured EIRP and NTC type-approval before deployment. **3.3V logic only — never apply 5V to the SPI pins.** ⚠️ Never power without an antenna — instant PA damage. Use **RadioLib**'s SX1262 driver (`sandeepmistry/LoRa` does not support SX126x). |
 | 3 | **ESP32-CAM** (OV2640, WiFi/BT) — overhead camera node | 1 | ₱649 | Makerlab PH — in stock | [Makerlab: ESP32-CAM OV2640](https://makerlab.ph/search?q=esp32) | ⚠️ Streams over WiFi only — see **Compatibility Notes #3** |
 | 4 | **8-Channel Relay Module, 12V coil, optocoupler** — drives air pumps + bilge pumps | 1 | ₱273 | 4.8★ (12,201 ratings) | [Shopee listing](https://shopee.ph/DC-12V-8-Channel-Relay-Module-with-Optocoupler-Isolation-PLC-Control-Relay-Output-8-Way-Relay-Module-for-Arduino-i.266699902.19079723116) | 🔴 **8-ch, not 4-ch**: 2 air pumps + 2 bilge pumps = 4 loads, so a 4-ch board leaves no spare channels for cage valves or a second DO stage; 10A contacts ≥ pump inrush ✔; choose **low-level trigger** for ESP32 3.3V GPIO |
 
@@ -118,8 +118,8 @@
 
 | # | Check | Verdict |
 |---|-------|---------|
-| 1 | **LoRa band / regulatory status** | ⚠️ Do not label 433 MHz licence-free without a specific NTC citation. Verify the applicable NTC SRD/telemetry rules, maximum EIRP and type-approval requirements; keep the pin-compatible 915 MHz E22 fallback. No TTN/ChirpStack — the dashboard talks to the **house bridge node** over WiFi. |
-| 2 | **Voltage chain and mains safety** | ⚠️ 220V AC (household solar, 24/7) → shore-end 30 mA RCD + breaker (#13) → weatherproof feedthroughs → **12V 30 A PSU (#14)** → 12V pumps/relays directly; 12V→5V buck (#19) for the camera node and the ESP32 DevKit 5V pin (onboard 3.3 V LDO feeds the RA-02 — never at 5V). No on-site panel/MPPT/battery. Licensed-electrician installation, PEC review, IP67/IP68 connectors, drip loops, no submerged joints, monthly RCD test, and measured fuse/conductor coordination are deployment gates. |
+| 1 | **LoRa band / regulatory status** | ✅ 915 MHz (E22-900M22S / SX1262) — the Philippine NTC licence-free SRD band for low-duty telemetry; both ends on the same band/freq/SF. Confirm maximum EIRP and type-approval before deployment. No TTN/ChirpStack — the dashboard talks to the **house bridge node** over WiFi. |
+| 2 | **Voltage chain and mains safety** | ⚠️ 220V AC (household solar, 24/7) → shore-end 30 mA RCD + breaker (#13) → weatherproof feedthroughs → **12V 30 A PSU (#14)** → 12V pumps/relays directly; 12V→5V buck (#19) for the camera node and the ESP32 DevKit 5V pin (onboard 3.3 V LDO feeds the E22-900M22S — never at 5V). No on-site panel/MPPT/battery. Licensed-electrician installation, PEC review, IP67/IP68 connectors, drip loops, no submerged joints, monthly RCD test, and measured fuse/conductor coordination are deployment gates. |
 | 3 | **Camera connectivity** | ⚠️ ESP32-CAM uses **WiFi, not LoRa** (video can't fit LoRa bandwidth). Options: (a) farmer connects phone to camera AP during pond visits, (b) put camera at the house with the bridge node where WiFi exists, (c) upgrade to an LTE camera — budget decision for the panel |
 | 4 | **Ammonia sensing gap** | ⚠️ No affordable verified NH₃ sensor on Shopee. Industry option: DFRobot RS485 NH₄⁺ sensor (~$209 / ~₱12k, [dfrobot.com](https://www.dfrobot.com/blog-20760.html)). **Thesis workaround:** pH + temperature can estimate the toxic fraction/risk only; an absolute NH₃ concentration requires measured Total Ammonia Nitrogen (TAN) or a laboratory test. |
 | 5 | **Sensor ADC levels** | ⚠️ PH-4502C outputs up to ~5V with 2.5V offset → use 10 kΩ series + 18 kΩ shunt (5 V → about 3.21 V) or an ADS1115 I2C ADC with 3.3 V level shifting. DFRobot EC/DO boards output ≤3.4V → direct ✔ |
@@ -136,10 +136,10 @@
 
 | Load | Watts | Duty | Wh/day |
 |------|-------|------|--------|
-| ESP32 + RA-02 controller node | ~1.5 | 24 h | 36 |
+| ESP32 + E22-900M22S controller node | ~1.5 | 24 h | 36 |
 | Air pumps (aeration, staged 1–2 running) | ~38 max | 16–24 h (incl. night) | ~600 worst case |
 | Bilge pumps (salinity events) | ~60 | intermittent (~1 h/day avg) | ~60 |
-| House bridge node (ESP32 + RA-02, at house w/ mains) | ~1.5 | 24 h | 0 (house supply) |
+| House bridge node (ESP32 + E22-900M22S, at house w/ mains) | ~1.5 | 24 h | 0 (house supply) |
 | ESP32-CAM node | ~1.5 | visits only | ~10 |
 | **Total on-site DC load** | | | **≈ 430–700 Wh/day** |
 | **On-site supply: 12V 30 A PSU (#14)** | 360 W | — | peak ≈ 100 W ≈ 8.4 A → ~3.5× headroom for inrush ✔ |
@@ -150,24 +150,24 @@
 
 | Category | Est. Cost |
 |----------|----------|
-| Boards & connectivity (3× ESP32, 3× RA-02+antenna, ESP32-CAM, 8-ch relay) | ₱3,436 |
+| Boards & connectivity (3× ESP32, 3× E22-900M22S+antenna, ESP32-CAM, 8-ch relay) | ₱3,436 |
 | Sensors (Tier 1: EC + 2× DS18B20 → full set incl. pH + DO) | ₱5,647 → ₱19,042–20,241 |
 | Aeration + pumps (2× 12V 30–60 L/min air pumps, air stones/manifold, 2× bilge) | ₱3,300–4,000 |
 | Power — AC drop + protection + 12V supply (outdoor AC run, RCD/breaker, 12V 30 A PSU) | ₱2,900–4,600 |
 | Structure & materials (boxes ×8, foam-filled pontoons ×8–12, frame, misc) | ₱11,200–16,700 |
-| Protection, calibration & consumables (§6: buck, AC-fail detect, fuses, glands, buffers, EC standard, DO membranes, KCl, refractometer, brine reserve) | ₱3,259–5,015 |
+| Protection, calibration & consumables (§6: buck, AC-fail detect, fuses, glands, buffers, EC standards, DO membranes, KCl, refractometer, brine reserve) | ₱3,409–5,315 |
 | Control interface (§7: AUTO/OFF/MANUAL selector + status LEDs) | ₱200–400 |
 | Distribution & sensor hub (§8: PVC air/water grid, per-cage outlets, hose, probe holder) | ₱2,300–4,800 |
-| **TOTAL (Tier 1 sensors)** | **≈ ₱32,200–44,600** |
-| **TOTAL (all sensors)** | **≈ ₱45,600–59,200** |
+| **TOTAL (Tier 1 sensors)** | **≈ ₱32,350–44,900** |
+| **TOTAL (all sensors)** | **≈ ₱45,750–59,500** |
 
 > Category figures are ranges; each total is the sum of its low and high ends. The webapp itself costs ₱0 on free tiers (Firebase Spark + Vercel Hobby).
 >
 > 💰 **₱50,000 hardware ceiling:** the camera (#3) and its buck (#19) are the designated first cut (₱705–769) if the build runs over — it is the only optional subsystem. The DO kit (₱12–13k) is what pushes the full set past the ceiling, so it belongs in the last phase; the DO probe and the aerators are never cut.
 >
-> **Where the money actually goes:** solar generation costs ₱0 here — the household already supplies it, so the power category is only the AC drop, its protection and the 12 V supply (₱2,900–4,600). Two items now dominate: the DO kit (#8) at ₱12,000–13,199 and the EC sensor (#5) at ₱5,489 — together ₱17,500–18,700. The old #1 spend, the LoRaWAN gateway (₱10,645), is gone: the entire radio stack (3 × ESP32 + RA-02 + antenna) now costs ~₱2,500. The high end of every range assumes the most expensive listing; the low ends are real listings linked in each row.
+> **Where the money actually goes:** solar generation costs ₱0 here — the household already supplies it, so the power category is only the AC drop, its protection and the 12 V supply (₱2,900–4,600). Two items now dominate: the DO kit (#8) at ₱12,000–13,199 and the EC sensor (#5) at ₱5,489 — together ₱17,500–18,700. The old #1 spend, the LoRaWAN gateway (₱10,645), is gone: the entire radio stack (3 × ESP32 + E22-900M22S + antenna) now costs ~₱2,500. The high end of every range assumes the most expensive listing; the low ends are real listings linked in each row.
 
-> **Which items belong to which phase** (per-phase costs are in the README's BOM & Budget section): ① bench — ESP32 ×2 (#1) + RA-02/antenna ×2 (#2) — the float node plus a bench partner node — DS18B20 (#7), relay (#6), one bilge pump (#11), selector + LEDs (#29–30) · ② dashboard — house bridge node (1 × ESP32 #1 + RA-02/antenna #2), EC sensor (#5), refractometer (#27), EC standard (#24) · ③ power to the float — AC drop (#12), RCD (#13), 12V 30A PSU (#14), AC-fail module (#20), buck (#19), fuses (#21), glands (#22) · ④ full feature set — DO (#8), pH (#6) + buffers (#23), camera (#3), second bilge pump (#11), boxes (#15), frame + netting + shade (#17), pontoons (#16), misc hardware (#18), pipe grid + hose + sensor hub (#31–33), air pumps and stones (#9–10), brine reserve (#28), DO membranes (#25), KCl (#26).
+> **Which items belong to which phase** (per-phase costs are in the README's BOM & Budget section): ① bench — ESP32 ×2 (#1) + E22-900M22S/antenna ×2 (#2) — the float node plus a bench partner node — DS18B20 (#7), relay module (#4), one bilge pump (#11), selector + LEDs (#29–30) · ② dashboard — house bridge node (1 × ESP32 #1 + E22-900M22S/antenna #2), EC sensor (#5), refractometer (#27), EC standards (#24) · ③ power to the float — AC drop (#12), RCD (#13), 12V 30A PSU (#14), AC-fail module (#20), buck (#19), fuses (#21), glands (#22) · ④ full feature set — DO (#8), pH (#6) + buffers (#23), camera (#3), second bilge pump (#11), boxes (#15), frame + netting + shade (#17), pontoons (#16), misc hardware (#18), pipe grid + hose + sensor hub (#31–33), air pumps and stones (#9–10), brine reserve (#28), DO membranes (#25), KCl (#26).
 
 ### 🎯 ₱50,000-capped build
 
@@ -177,11 +177,11 @@ Apply these cuts in order until the running total is under ₱50,000:
 |-------|-----|-------|------------------|
 | 1 | Camera #3 + its buck #19 | ₱705–769 | Overhead monitoring → visual checks during pond visits. Nothing else depends on it |
 | 2 | DO kit #8 + membranes #25 | ₱12,500–14,199 | The DO trigger. Until the probe is bought, run night aeration on a fixed schedule (e.g. 30 min on / 30 min off) and keep the temperature + salinity logic |
-| 3 | Dev/spare node set (1 × ESP32 #1 + RA-02/antenna #2) | ₱838 | No hot spare if the controller dies mid-defense |
+| 3 | Dev/spare node set (1 × ESP32 #1 + E22-900M22S/antenna #2) | ₱838 | No hot spare if the controller dies mid-defense |
 | 4 | Second bilge pump #11 | ~₱649 | Two-zone salinity correction becomes single-zone (one grid half) |
 | 5 | pH kit #6 + buffers #23 | ₱1,670 | pH monitoring; the NH₃ estimate loses its pH input |
 
-**With cuts 1–2 applied** (the configuration that fits the ceiling): boards ₱2,787 · sensors ₱7,042 · aeration ₱3,298–3,998 · power ₱2,900–4,600 · structure ₱11,192–16,692 · protection & calibration ₱2,703–3,895 · control interface ₱200–400 · distribution & hub ₱2,300–4,800 → **≈ ₱32,400–44,200**.
+**With cuts 1–2 applied** (the configuration that fits the ceiling): boards ₱2,787 · sensors ₱7,042 · aeration ₱3,298–3,998 · power ₱2,900–4,600 · structure ₱11,192–16,692 · protection & calibration ₱2,853–4,195 · control interface ₱200–400 · distribution & hub ₱2,300–4,800 → **≈ ₱32,550–44,500**.
 
 **With cuts 1–5 applied:** **≈ ₱29,300–41,100** (the ₱338 1100 GPH bilge listing, 4.6★, becomes the single pump).
 

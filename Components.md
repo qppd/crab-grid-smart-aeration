@@ -22,9 +22,9 @@
 
 | Component | Spec / Count | Validated? | Purpose / Notes |
 |-----------|--------------|-----------|-----------------|
-| Controller | **ESP32 DevKit (38-pin, ESP32-WROOM-32) + EBYTE RA-02 (SX1278, 433 MHz)**, centred in the setup, IP65 enclosure | ✅ OK with compliance gate | Runs automation logic; links sensors, pumps, and the LoRa point-to-point link. WiFi stays off on the float. Budget pick over the Heltec V3: same SX12xx radio family, ~₱740/node (board + module + antenna) instead of ₱1,974, and the pin map below avoids every WiFi/boot conflict. Verify the RA-02 RF path, measured EIRP, and Philippine NTC authorization; keep a 915 MHz pin-compatible fallback. |
+| Controller | **ESP32 DevKit (38-pin, ESP32-WROOM-32) + EBYTE E22-900M22S (SX1262, 915 MHz)**, centred in the setup, IP65 enclosure | ✅ OK with compliance gate | Runs automation logic; links sensors, pumps, and the LoRa point-to-point link. WiFi stays off on the float. Budget pick over the Heltec V3: ~₱740/node (board + module + antenna) instead of ₱1,974, and the pin map below avoids every WiFi/boot conflict. 915 MHz is the Philippine NTC licence-free SRD band; confirm EIRP/type-approval before deployment. |
 | Water Quality Sensors | 4 sensor types: EC/salinity (K=10), pH, dissolved oxygen (**one probe**), temperature (2× DS18B20 probes) | ✅ Validated ranges with limits | **EC K=10 (0–100 mS/cm)** covers the conductivity range around seawater (35 ppt is approximately 53 mS/cm at 25 °C), but salinity must use the manufacturer/PSS-78 conversion, not a fixed linear ppt factor. **pH E-201-C** covers the 7.5–8.5 brackish target ✔. **DO galvanic probe (SEN0237-A)** supports the ≥5 ppm target, but one probe is a single-point failure; provide flow across the membrane, a handheld backup, and spare membrane/electrolyte. DS18B20 covers the 27–30 °C band ✔. |
-| LoRa ⇄ WiFi Bridge | **A second ESP32 DevKit + RA-02 (433 MHz) at the house** where WiFi/internet exists — the "bridge node" | 🔴 **Replaced LoRaWAN gateway (Sept 2026)** | The ₱10,645 LoRaWAN gateway is gone. The bridge receives float uplinks and pushes them into the Firebase webapp; queued commands are pulled from the webapp and sent back down over LoRa — plain point-to-point radio, no TTN/ChirpStack server. The SX1278 RFO path is limited to about +14 dBm, while PA_BOOST can reach up to +20 dBm only with the correct RF path/matching network; verify the actual RA-02 module and measured EIRP. The 1–3 km LOS estimate is a test target, not a regulatory guarantee. Confirm NTC authorization for 433 MHz or use the EBYTE E22-900M22S (915 MHz) fallback — same SPI wiring. |
+| LoRa ⇄ WiFi Bridge | **A second ESP32 DevKit + E22-900M22S (915 MHz) at the house** where WiFi/internet exists — the "bridge node" | 🔴 **Replaced LoRaWAN gateway (Sept 2026)** | The ₱10,645 LoRaWAN gateway is gone. The bridge receives float uplinks and pushes them into the Firebase webapp; queued commands are pulled from the webapp and sent back down over LoRa — plain point-to-point radio, no TTN/ChirpStack server. SX1262 delivers up to +22 dBm on the 915 MHz SRD band. The 1–3 km LOS estimate is a test target, not a regulatory guarantee; confirm NTC type-approval and measured EIRP before deployment. |
 | Aerator | **2 × 12V DC electromagnetic air pump, 30–60 L/min rated open-flow, ≥ 4 outlets each** (NOT 2× mini aquarium pumps) | 🔴 **Corrected** | Mini pumps (~0.5–2 L/min each) cannot aerate 8 cages. The biological target is 1.5–2 L/min per 100 L, so 8 cages × ~40 L ≈ 320 L needs about **4.8–6.4 L/min delivered total** (roughly 0.6–0.8 L/min per cage). The selected pump rating is deliberately above the target to cover depth, tubing and stone losses; use a manifold, needle valves and per-branch flow measurement so excess air is not dumped into the cages. Two pumps provide N+1 redundancy and alternate duty. |
 | Air stones / tubing | 8–10 × air stones + 20 m 4 mm silicone tubing + gang valve manifold | ✅ Added | Distributes air from the 2 pumps into each of the 8 cages. |
 | Circulation / Flush Pump | **2 × 12V Marine Bilge Pump 1100 GPH** (submersible) | 🔴 **Function corrected** | Provides circulation/flushing and can support a controlled salinity experiment. It does not reliably correct salinity in open slotted cages because tidal exchange flushes the dose and dense brine sinks. Use isolation sleeves or a closed-loop/RAS enclosure for a defensible salinity-control test; verify pump current against the relay and fuse rating. |
@@ -40,10 +40,11 @@
 
 | Function | GPIO | Why it's safe |
 |-----------|------|---------------|
-| LoRa RA-02 SCK / MISO / MOSI | 18 / 19 / 23 | Hardware VSPI — independent of WiFi |
-| LoRa RA-02 NSS | 5 | Boot-strapping pin, but NSS **idles HIGH (radio deselected)** — safe at boot |
-| LoRa RA-02 RST | 14 | Driven after boot; the brief boot-time PWM glitch just resets the radio harmlessly |
-| LoRa RA-02 DIO0 (IRQ) | 26 | Idle LOW at boot, no strapping role; WiFi blocks only ADC2 *analog* use, not digital |
+| LoRa E22-900M22S SCK / MISO / MOSI | 18 / 19 / 23 | Hardware VSPI — independent of WiFi |
+| LoRa E22-900M22S NSS | 5 | Boot-strapping pin, but NSS **idles HIGH (radio deselected)** — safe at boot |
+| LoRa E22-900M22S RST | 14 | Driven after boot; the brief boot-time PWM glitch just resets the radio harmlessly |
+| LoRa E22-900M22S DIO1 (IRQ) | 26 | SX1262 signals RX/TX-done on DIO1 (not DIO0); idle LOW at boot, no strapping role; GPIO 26 is ADC2-capable but used as a digital IRQ |
+| LoRa E22-900M22S BUSY | 17 | SX1262 requires a BUSY line (not present on SX127x); GPIO 17 is a free digital pin (ADC2-capable, digital-only) |
 | DS18B20 ×2 (shared 1-Wire bus) | 16 | Free digital pin; external 4.7 kΩ pull-up to 3.3 V |
 | pH analog output (via 10 kΩ series + 18 kΩ shunt divider, or ADS1115) | 34 | **ADC1** — works with WiFi on; input-only pin. 5 V → about 3.21 V with the passive divider; use a common ground and, preferably, an external 16-bit I2C ADC for thesis-grade pH. |
 | EC/salinity analog output | 35 | **ADC1** — input-only |
@@ -58,7 +59,7 @@
 | Mode LED (external) | 22 | Output |
 | Link/status LED | 2 (onboard LED) | The devkit's boot LED doubles as the link indicator |
 
-**Leave unconnected:** GPIO 0 (boot strapping — low at reset = flash mode), GPIO 12 (HIGH at boot = flash-voltage fault → boot failure), GPIO 15 (boot strapping), GPIO 1/3 (USB serial). Relay modules are low-level trigger: drive the GPIO HIGH before initializing the pins, keep the relay off at boot, and add an external 10 kΩ pull-up to 3.3 V on each used relay input if the module does not already provide a reliable pull-up. The house bridge reuses the same SPI wiring (18/19/23/5/14/26).
+**Leave unconnected:** GPIO 0 (boot strapping — low at reset = flash mode), GPIO 12 (HIGH at boot = flash-voltage fault → boot failure), GPIO 15 (boot strapping), GPIO 1/3 (USB serial). Relay modules are low-level trigger: drive the GPIO HIGH before initializing the pins, keep the relay off at boot, and add an external 10 kΩ pull-up to 3.3 V on each used relay input if the module does not already provide a reliable pull-up. The house bridge reuses the same SPI wiring (18/19/23/5) plus DIO1 26 and BUSY 17.
 
 ---
 
