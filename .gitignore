@@ -1,3 +1,4 @@
+
 # Hardware guide (merged Components+BOM — keep local only)
 HARDWARE.md
 
@@ -9,16 +10,3 @@ Thumbs.db
 .DS_Store
 Desktop.ini
 
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Environment files
-.env
-.env.local
-
-# Temporary files
-*.tmp
-*.log
