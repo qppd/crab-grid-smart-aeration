@@ -5,8 +5,6 @@
 
 ## 1. Boards & Connectivity
 
-> **Changed Sept 2026 — LoRaWAN → plain point-to-point LoRa, and Heltec → budget ESP32 (₱10,645+ saved).** The RAK7268 LoRaWAN gateway and 2 × Heltec V3 (≈ ₱14,600) are replaced by **3 × ESP32 DevKit (₱349) + 3 × EBYTE E22-900M22S SX1262 (₱389) + 3 × 915 MHz antenna (₱100)** ≈ ₱2,500 for three node sets (float node, house bridge, dev/spare). Same radio physics, no TTN/ChirpStack subscription-server dependency, and every part is stocked at Makerlab PH. Full verified listing: [makerlab.ph](https://makerlab.ph/) (search "esp32", "lora").
-
 | # | Item | Qty | Est. Price | Rating (verified) | URL | Why compatible |
 |---|------|-----|-----------|-------------------|-----|----------------|
 | 1 | **ESP32 DevKit, 38-pin (ESP32-WROOM-32)** — main controller node (float) | 3 (float node + house bridge + spare/dev) | ₱349 ea | Makerlab PH — in stock | [Makerlab: Type-C ESP32 30/38-pin](https://makerlab.ph/search?q=esp32) · alt ₱350: [30/38-pin board](https://makerlab.ph/search?q=esp32) | WiFi+BT MCU reads all analog/digital water sensors; 3.3V logic — sensor boards below output ≤3.4V; WiFi stays OFF on the float. **Pin map avoids all WiFi (ADC2) and boot-strap conflicts — see [Components.md](Components.md) §Controller pin map** |
