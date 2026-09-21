@@ -4,6 +4,14 @@
 
 This document is the physical build reference: assembly order, the verified ESP32 38-pin pin map (WiFi- and boot-safe), subsystem wiring tables, and the pre-energize checklist. Electrical ratings and product links live in [`HARDWARE.md`](HARDWARE.md) and [`BOM.md`](BOM.md).
 
+## Wiring Project Files
+
+| File | Description |
+|------|-------------|
+| [`wiring/Smart Crab Aeration.ckt`](../wiring/Smart Crab Aeration.ckt) | CirKit Designer project file (editable schematic) |
+| [`wiring/circuit_image.png`](../wiring/circuit_image.png) | Circuit diagram export |
+| [CirKit Designer Web](https://app.cirkitdesigner.com/project/8bfbd974-cd46-45d2-8940-42625b01e279) | View/edit online |
+
 ## 1. Safety Gates
 
 1. The 220 V AC drop, RCD/breaker, and earthing are installed and commissioned by a **licensed electrician** (Philippine Electrical Code). Builders work on 12 V DC only.
