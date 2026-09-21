@@ -79,8 +79,6 @@
 
 ## 7. Control Interface (Manual + Automatic)
 
-> **Added Sept 2026.** Aeration is life-support and the LoRa link is polled point-to-point — a command lands only on the device's next uplink (5–15 min interval). AUTO is therefore the default, and a local selector exists so the pumps never depend on the cloud.
-
 | # | Item | Qty | Est. Price | Rating (verified) | URL | Why needed |
 |---|------|-----|-----------|-------------------|-----|------------|
 | 29 | **3-position rotary selector (AUTO / OFF / MANUAL)** + knob + panel label | 1 | ₱150–300 | electrical supply | [Shopee search: rotary selector switch](https://shopee.ph/search?keyword=rotary%20selector%20switch%203%20position) | Local fail-safe mode switch — readable at a glance and works with no internet, bridge node or phone. Wires to 2 GPIO inputs with debounce in firmware |
