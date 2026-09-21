@@ -16,9 +16,8 @@ A house-powered, remotely monitored smart aquaculture system for mud crab fatten
 
 ---
 
-> **Where to find what:** this README = overview, architecture and timeline · [`Components.md`](docs/Components.md) = engineering specs and validation rationale · [`docs/BOM.md`](docs/BOM.md) = prices, product links, compatibility verification and power budget · [`SETUP.md`](docs/SETUP.md), [`WIRING.md`](docs/WIRING.md), [`FIRMWARE.md`](docs/FIRMWARE.md), [`TESTING.md`](docs/TESTING.md), [`CALIBRATION.md`](docs/CALIBRATION.md), [`TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) = builder guides · [`APP.md`](docs/APP.md) = dashboard webapp specification · [`SYSTEM-ARCHITECTURE.md`](docs/SYSTEM-ARCHITECTURE.md), [`BLOCK-DIAGRAM.md`](docs/BLOCK-DIAGRAM.md), [`FLOWCHART.md`](docs/FLOWCHART.md) = diagrams (Mermaid) · [`STACKS.md`](docs/STACKS.md) = technology stack.
 
----
+
 
 ## Table of Contents
 
