@@ -209,8 +209,6 @@ Protected 220V AC drop from the house (30 mA RCD + breaker) + 12V 30A DC supply 
 ### Phase 4 — Full Feature Set (~₱34,850–46,400)
 DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump + fattening boxes + frame/netting + **4× round foam floats 50×90** + the PVC air/water grid + sensor hub + air pumps + misc hardware + a controlled salinity-test setup → complete system before deployment. Open-water brine correction is not a guaranteed feature.
 
-> **₱50,000 hardware ceiling:** if the build runs over, the **camera is the first cut** — #3 plus its LM2596S module (#19) is ₱748. The DO kit (₱12–13k) is what pushes the full set past the ceiling, so it belongs in the last phase. The BOM carries the full cut order and the resulting **₱39,934–48,526** configuration; the DO probe and the aerators are never cut. The brine reserve is only retained for a controlled salinity experiment, not as proof of open-water correction.
-
 ---
 
 ## Getting Started
