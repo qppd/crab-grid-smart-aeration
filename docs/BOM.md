@@ -1,9 +1,5 @@
 # BOM — Solar Automated LoRa-Integrated Mud Crab Aeration Network with Crab Grid Observation
 
-> **Sources:** Shopee PH / Lazada PH / official stores. Links showing a rating were verified live via web search on Sept 2026. Rows that read "check listing", "electrical supply" or "any hardware/pet store" are **unverified category searches** — check the rating (target ≥ 4.7 stars) before ordering. Ratings shown = product or shop rating from the listing; all are **≥ 4.7 stars** or from shops with **thousands of ratings / >1k followers**.
-> Prices in **PHP**, rounded, subject to seller promotions.
->
-> **Validated against:** SEAFDEC/AQD mud crab culture standards (water-quality targets), the FAO mud crab manual (cage/fattening practice), DFRobot datasheets (sensor ranges), and aquaculture aeration/buoyancy sizing rules. Where a spec changed from the original concept, the reason is stated in the same cell.
 
 ---
 
