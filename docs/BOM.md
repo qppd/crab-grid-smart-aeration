@@ -94,8 +94,6 @@
 
 ## 8. Distribution Network & Sensor Hub
 
-> **Added Sept 2026.** The PVC pipe grid carries the air and the water — but **never both in the same lumen**: water floods an air line and stops aeration, while air pockets choke water flow. Keep the air circuit above the waterline or add a drip loop. Remember the pipes are conduit, not flotation — water-filled pipe weighs ~1 kg/L, which the 2:1 buoyancy factor already absorbs.
-
 | # | Item | Qty | Est. Price | Rating (verified) | URL | Why needed |
 |---|------|-----|-----------|-------------------|-----|------------|
 | 31 | **PVC pipe network, 25 mm (1")** — pipe, tees, elbows, reducers, end caps, 8 × 6–8 mm per-cage outlets + small valves | 1 set | ₱1,500–3,000 | hardware supply | [Shopee search: PVC pipe fittings](https://shopee.ph/search?keyword=pvc%20pipe%20fittings%201%20inch) | Doubles as the air header (drop tubes and stones are #10) and as the water header fed by the bilge pumps. Split the grid into two halves — one per bilge pump — for balanced flow, and add flush ports for salt and algae |
