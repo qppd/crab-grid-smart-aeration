@@ -23,54 +23,6 @@
 
 > **Targets:** the SEAFDEC/AQD ranges these sensors were chosen against are tabulated in [`Components.md`](Components.md). The one gap is unionized NH₃ (≤ 0.1 ppm) — no affordable sensor exists. pH + temperature can estimate the toxic fraction/risk only; an absolute NH₃ concentration requires measured Total Ammonia Nitrogen (TAN) or a laboratory test. |
 >
-|> **Start with two sensors:** buy **#5 (EC/salinity)** + **#7 (DS18B20)** first (₱5,647), then add pH and DO as budget allows. Salinity + temperature drive the automated first-aid loop (rain-dilution scenario).
-|>
-|> **Ammonia Risk Estimation (pH + Temperature Only):** Walang direct NH₃ sensor — gamitin ang existing pH + temp readings para mag-estimate ng unionized ammonia risk. Ang ammonia sa tubig ay nasa dalawang form: NH₄⁺ (ionized/hindi nakakapait) at NH₃ (unionized/nakakapait). Ang ratio nila ay depende sa pH at temperature.
-|>
-|> ### Formula (Emerson/Khoo Method):
-|> **Step 1:** I-calculate ang `pKa` (temperature-dependent):
-|> ```
-|> pKa ≈ 0.09018 + 2729.92/(T+273.15) + 4.4106 × log₁₀((T+273.15)/298.15)
-|> ```
-|> kung `T` = temperature in °C
-|>
-|> **Step 2:** I-calculate ang fraction ng unionized ammonia:
-|> ```
-|> f(NH₃) = 1 / (1 + 10^((pKa - pH)))
-|> ```
-|>
-|> **Step 3:** Kung may TAN (Total Ammonia Nitrogen) measurement — even periodic lab tests:
-|> ```
-|> [NH₃] = TAN × f(NH₃)
-|> ```
-|>
-|> ### Practical Implementation:
-|> | Scenario | Paano |
-|> |----------|-------|
-|> | **Walang TAN** | Gamitin lang ang pH + temp bilang **risk indicator** — high pH + warm temp = higher risk |
-|> | **May periodic TAN** | I-compute ang exact NH₃ concentration gamit ang formula sa itaas |
-|> | **Critical threshold** | ≥ 0.1 ppm unionized NH₃ = danger zone for mud crabs |
-|>
-|> ### Quick Reference Table (CRAB_GRID Conditions):
-|> Sa mga common condition sa project (27–30°C, pH 7.5–8.5):
-|>
-|> | pH | Temp (°C) | Risk Level |
-|> |----|-----------|------------|
-|> | 7.5 | 27 | Low |
-|> | 8.0 | 28 | Moderate |
-|> | 8.5 | 30 | High |
-|>
-|> ### Dashboard Warning Logic:
-|> - **Alert Level:** pH > 8.2 AND temp > 28°C
-|> - **Critical:** pH > 8.4 AND temp > 29°C
-|> - I-logger ang pH + temp continuously, TAN samples periodically (weekly/biweekly lab test)
-|>
-|> ### Recommendation for Thesis:
-|> 1. Regular lab test ng TAN — weekly o biweekly — para ma-validate ang estimates
-|> 2. Dashboard warning kapag pH > 8.2 at temp > 28°C = alert level
-|> 3. I-logger ang pH + temp continuously, TAN samples periodically
-|>
-|> **Reference:** Millero, F.J. et al. "The equilibrium constants of carbonic acid, boric acid and related species" (Chemical Reviews, 2006) — standard method for ammonia speciation.
 
 ## 3. Actuators (Aeration + Pumps)
 
@@ -81,8 +33,6 @@
 | 11 | **12V Marine Bilge Pump 1100 GPH** (submersible) — circulation/flush pump | 2 | ₱649 ea | 4.8 stars (100% chat response) | [Shopee listing](https://shopee.ph/12v-1100gph-Automatic-Submersible-Non-Automatic-Marine-Electric-Bilge-Pump-Submersible-Boat-Bilge-Water-Pump-For-Ponds-Pools-Spas-Silent-Boat-Caravan-RV-Submersible-i.385158564.53853831269) · cheaper alt 4.6 stars/294: [₱338](https://shopee.ph/1100GPH-12v-Submersible-Water-Pump-with-Switch-for-Boat-Automatic-Submersible-Small-Boat-Bilge-Pump-i.1768137647.45160954686) | Provides circulation/flushing and can support a controlled salinity experiment. It does not reliably correct salinity in open slotted cages because tidal exchange flushes the dose and dense brine sinks. Use isolation sleeves or a closed-loop/RAS enclosure for a defensible salinity-control test. Verify actual running/inrush current against the relay and branch fuse. |
 
 ## 4. Power System (220V AC from Household Solar)
-
-> **Changed Sept 2026 — no on-site solar/battery.** The deployment is wired from the house, whose existing solar installation (array + battery bank **> 600 Ah** + inverter) supplies **220V AC 24/7**. Panels, MPPT and on-site battery are therefore **not purchased**; the on-site work is a protected AC drop plus a 12V DC supply for the pumps, relays and controller. The old LVD (battery deep-discharge protection) goes away with the battery. The deferred off-grid variant is kept at the end of this section for reference.
 
 | # | Item | Qty | Est. Price | Rating (verified) | URL | Sizing rationale |
 |---|------|-----|-----------|-------------------|-----|------------------|
