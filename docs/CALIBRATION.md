@@ -22,7 +22,7 @@ Calibrate before trusting any reading, and log every calibration. Calibration co
 2. Calibrate with **4.01** then **6.86** buffers at pond temperature; follow the PH-4502C offset procedure and the `DFRobot_pH` two-point flow.
 3. Acceptance: reading within ±0.05 pH of each buffer; slope check fails if the probe is dried out or contaminated.
 4. Store the electrode in **KCl storage solution** ([`BOM.md`](BOM.md) #26) — never dry, never distilled water; the probe dies in weeks otherwise.
-5. If using the 10 kΩ/18 kΩ divider, repeat the calibration after any hardware change to the divider or the ADC path; an ADS1115 path is preferred for thesis-grade resolution.
+5. If using the 10 kΩ/18 kΩ divider, repeat the calibration after any hardware change to the divider or the ADC path; an ADS1115 path is preferred for professional-grade resolution.
 
 ## 3. EC / Salinity (DFRobot K=10)
 

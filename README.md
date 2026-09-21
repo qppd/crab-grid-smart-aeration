@@ -16,7 +16,7 @@ A house-powered, remotely monitored smart aquaculture system for mud crab fatten
 
 ---
 
-> **Where to find what:** this README = overview, architecture and timeline · [`Components.md`](docs/Components.md) = engineering specs and validation rationale · [`docs/BOM.md`](docs/BOM.md) = prices, product links, compatibility verification and power budget · [`SETUP.md`](docs/SETUP.md), [`WIRING.md`](docs/WIRING.md), [`FIRMWARE.md`](docs/FIRMWARE.md), [`TESTING.md`](docs/TESTING.md), [`CALIBRATION.md`](docs/CALIBRATION.md), [`TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) = builder guides · [`APP.md`](docs/APP.md) = dashboard webapp specification · [`SYSTEM-ARCHITECTURE.md`](docs/SYSTEM-ARCHITECTURE.md), [`BLOCK-DIAGRAM.md`](docs/BLOCK-DIAGRAM.md), [`FLOWCHART.md`](docs/FLOWCHART.md) = thesis diagrams (Mermaid) · [`STACKS.md`](docs/STACKS.md) = technology stack.
+> **Where to find what:** this README = overview, architecture and timeline · [`Components.md`](docs/Components.md) = engineering specs and validation rationale · [`docs/BOM.md`](docs/BOM.md) = prices, product links, compatibility verification and power budget · [`SETUP.md`](docs/SETUP.md), [`WIRING.md`](docs/WIRING.md), [`FIRMWARE.md`](docs/FIRMWARE.md), [`TESTING.md`](docs/TESTING.md), [`CALIBRATION.md`](docs/CALIBRATION.md), [`TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) = builder guides · [`APP.md`](docs/APP.md) = dashboard webapp specification · [`SYSTEM-ARCHITECTURE.md`](docs/SYSTEM-ARCHITECTURE.md), [`BLOCK-DIAGRAM.md`](docs/BLOCK-DIAGRAM.md), [`FLOWCHART.md`](docs/FLOWCHART.md) = diagrams (Mermaid) · [`STACKS.md`](docs/STACKS.md) = technology stack.
 
 ---
 
@@ -196,7 +196,7 @@ Rules the firmware enforces:
 
 Every part, price, product link and rating lives in [`docs/BOM.md`](docs/BOM.md), together with the compatibility verification and the power budget. Headline totals: **Tier 1 sensors ≈ ₱39,787–48,879**; **full sensor set ≈ ₱53,182–63,473** (per-category ranges are in the BOM).
 
-Purchase is phased to match the thesis timeline — the four phases add up to the build total above (≈ **₱53,182–63,473** at item prices):
+Purchase is phased to match the project timeline — the four phases add up to the build total above (≈ **₱53,182–63,473** at item prices):
 
 ### Phase 1 — Bench Testing (~₱2,906)
 2 × ESP32 DevKit + 2 × E22-900M22S/915 MHz antenna + DS18B20 + relay module + one bilge pump + the AUTO/OFF/MANUAL selector → build & test the control loop and the LoRa link on the bench (12V from a lab supply, or buy the on-site PSU now).
@@ -208,7 +208,7 @@ House bridge node (ESP32 + E22-900M22S) + EC/salinity sensor + refractometer + c
 Protected 220V AC drop from the house (30 mA RCD + breaker) + 12V 30A DC supply + LM2596S camera module + fuses/glands → run the float off the household solar system. A licensed electrician must install and commission the mains side.
 
 ### Phase 4 — Full Feature Set (~₱34,850–46,400)
-DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump + fattening boxes + frame/netting + **4× round foam floats 50×90** + the PVC air/water grid + sensor hub + air pumps + misc hardware + a controlled salinity-test setup → complete system before panel defense. Open-water brine correction is not a guaranteed feature.
+DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump + fattening boxes + frame/netting + **4× round foam floats 50×90** + the PVC air/water grid + sensor hub + air pumps + misc hardware + a controlled salinity-test setup → complete system before deployment. Open-water brine correction is not a guaranteed feature.
 
 > **₱50,000 hardware ceiling:** if the build runs over, the **camera is the first cut** — #3 plus its LM2596S module (#19) is ₱748. The DO kit (₱12–13k) is what pushes the full set past the ceiling, so it belongs in the last phase. The BOM carries the full cut order and the resulting **₱39,934–48,526** configuration; the DO probe and the aerators are never cut. The brine reserve is only retained for a controlled salinity experiment, not as proof of open-water correction.
 
@@ -229,7 +229,7 @@ DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump +
 1. **Scaffold the floating grid** on foam-filled pontoon floats, with the frame and gantry in UV-stabilized PVC/FRP or properly sealed marine-grade material; use Grade 316 stainless or nylon fasteners in brackish water.
 2. **Mount the 8 fattening boxes** on the grid, one crab per box, shaded from direct sun.
 3. **Position the controller node** (ESP32 + E22-900M22S) in the centre of the setup in an IP65 enclosure.
-4. **Connect the sensors** to the ESP32 ADC/GPIO pins per the pin map in [`Components.md`](docs/Components.md). For the minimum pH divider use 10 kΩ series + 18 kΩ shunt (5 V → about 3.21 V); for thesis-grade pH, use an ADS1115 I2C ADC and 3.3 V level shifting.
+4. **Connect the sensors** to the ESP32 ADC/GPIO pins per the pin map in [`Components.md`](docs/Components.md). For the minimum pH divider use 10 kΩ series + 18 kΩ shunt (5 V → about 3.21 V); for professional-grade pH, use an ADS1115 I2C ADC and 3.3 V level shifting.
 5. **Wire the relay module** to the air pumps and bilge pumps, following the WiFi/boot-safe pin map in [`Components.md`](docs/Components.md) (no analog on ADC2 pins while WiFi runs, nothing on boot-strap pins 0/12/15).
 6. **Run the power drop** — 220V AC from the house (30 mA RCD + breaker at the house end, weatherproof IP67/IP68 terminations, drip loops, no submerged joints) → 12V 30A DC supply on the float → fused distribution. Have a licensed electrician verify conductor size, earthing, breaker coordination and Philippine Electrical Code compliance.
 7. **Calibrate before trusting any reading** — 2-point pH (4.01 / 6.86), EC with 1.413 mS/cm and 12.88 mS/cm standards following the sensor procedure, and cross-check salinity with the refractometer. Treat 12.88 mS/cm as a conductivity standard, not as 35 ppt seawater.
@@ -312,7 +312,7 @@ All system-level checks, with their verdicts, are in [`docs/BOM.md`](docs/BOM.md
 - [ ] Phase 4: Full feature set (DO, pH, camera, boxes)
 - [ ] NTC/Philippine Electrical Code sign-off and licensed-electrician commissioning
 - [ ] Field testing in mangrove environment
-- [ ] Thesis panel defense
+- [ ] System validation
 
 ---
 

@@ -84,4 +84,4 @@ Feature specification and safety interlocks: [`APP.md`](APP.md) §1 and §5.
 
 1. **No LoRaWAN server** (TTN/ChirpStack) — the link is plain point-to-point to the house bridge.
 2. **No on-site solar panels, MPPT, or battery** — power comes from the household's existing 24/7 solar-backed installation.
-3. **No paid hosting** — Firebase Spark and Vercel Hobby free tiers cover the thesis scale.
+3. **No paid hosting** — Firebase Spark and Vercel Hobby free tiers cover the project scale.

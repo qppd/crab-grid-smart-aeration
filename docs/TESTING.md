@@ -73,7 +73,7 @@ A gate-based test plan: no gate advances until the previous one passes. **Never 
 | NET-04 | Compare uplink echo vs dashboard state | Mode and pump states always match the device's belief |
 | NET-05 | Threshold edit on the dashboard | New value clamped to range; firmware applies it on the next downlink |
 
-## 8. Field Scenarios (thesis demo script)
+## 8. Field Scenarios (demonstration scenarios)
 
 1. **Rain dilution:** add freshwater to a test bucket loop — salinity falls below `SAL_MIN`; the bilge/flush logic runs; salinity recovers in an isolated or closed-loop test volume (open-water correction is not claimed).
 2. **DO depletion:** stop aeration in a test bucket until DO trends toward 3 ppm — the emergency path forces aeration and sends the emergency uplink.

@@ -16,7 +16,7 @@
 | Cage frames / gantry | UV-stabilized PVC/FRP preferred; bamboo or marine plywood only with marine-grade sealing | **Material correction** | Raw bamboo and ordinary plywood rot, split, and attract marine borers in a warm brackish mangrove. If wood is retained, seal all faces and end grain with marine epoxy/PU, keep sacrificial contact details replaceable, and specify Grade 316 stainless or nylon fasteners. |
 | Air / water routing | **The PVC pipe grid is the distribution network**: a separate air header (drop tube + stone per cage) and a water header fed by the bilge pumps (valved outlet per cage); flexible hose runs pump→cage as an option/backup | Added Sept 2026 | **Never one lumen for both** — water floods an air line and kills aeration, while air pockets choke water flow. Keep the air circuit above the waterline or add a drip loop. A 25 mm (1") header with 8 × 6–8 mm outlets balances flow; split the grid in two, one half per bilge pump. Add flush ports — salt and algae will settle in the runs. |
 | Sensor hub | Probe cluster **centred on the grid**, holding EC/pH/DO/2× DS18B20 at mid-depth (~20–30 cm below the surface) | Added Sept 2026 | Centred = balanced float load and symmetric cable runs. Mid-depth readings are representative: the surface is skewed by aeration and sun, the bottom by sludge and salinity stratification. Keep it clear of the aerator plume, provide gentle flow across the DO membrane before readings, and make it removable for calibration. One DO probe remains a single-point risk. |
-| Water circulation | Air-driven through the pipe grid, plus controlled circulation/flushing through the water header | **Scope correction** | Bubbling creates movement inside each cage; the valved outlets let the circulation pumps flush or mix a test volume. Reliable salinity correction is not claimed for open slotted cages because tidal flushing and dense brine sinking defeat dosing. Use temporary isolation sleeves or a closed-loop/RAS test if salinity control is a thesis objective. |
+| Water circulation | Air-driven through the pipe grid, plus controlled circulation/flushing through the water header | **Scope correction** | Bubbling creates movement inside each cage; the valved outlets let the circulation pumps flush or mix a test volume. Reliable salinity correction is not claimed for open slotted cages because tidal flushing and dense brine sinking defeat dosing. Use temporary isolation sleeves or a closed-loop/RAS test if salinity control is an objective. |
 
 ## Electronics & Hardware
 
@@ -46,7 +46,7 @@
 | LoRa E22-900M22S DIO1 (IRQ) | 26 | SX1262 signals RX/TX-done on DIO1 (not DIO0); idle LOW at boot, no strapping role; GPIO 26 is ADC2-capable but used as a digital IRQ |
 | LoRa E22-900M22S BUSY | 17 | SX1262 requires a BUSY line (not present on SX127x); GPIO 17 is a free digital pin (ADC2-capable, digital-only) |
 | DS18B20 ×2 (shared 1-Wire bus) | 16 | Free digital pin; external 4.7 kΩ pull-up to 3.3 V |
-| pH analog output (via 10 kΩ series + 18 kΩ shunt divider, or ADS1115) | 34 | **ADC1** — works with WiFi on; input-only pin. 5 V → about 3.21 V with the passive divider; use a common ground and, preferably, an external 16-bit I2C ADC for thesis-grade pH. |
+| pH analog output (via 10 kΩ series + 18 kΩ shunt divider, or ADS1115) | 34 | **ADC1** — works with WiFi on; input-only pin. 5 V → about 3.21 V with the passive divider; use a common ground and, preferably, an external 16-bit I2C ADC for professional-grade pH. |
 | EC/salinity analog output | 35 | **ADC1** — input-only |
 | DO sensor analog output | 36 (VP) | **ADC1** — input-only |
 
@@ -74,6 +74,54 @@ From **SEAFDEC/AQD (Philippines)** mud crab culture standards:
 | Temperature | **27–30 °C** | 2× DS18B20 stainless waterproof probes |
 | pH | **7.5–8.5** | E-201-C electrode + PH-4502C board |
 | NH₃ (unionized) | **Cannot be calculated from pH + temperature alone**. pH + temperature estimate the toxic fraction/risk; absolute NH₃ requires measured Total Ammonia Nitrogen (TAN) or a laboratory test. | derived risk indicator only |
+
+> ### Ammonia Risk Estimation (pH + Temperature Only)
+> Walang direct NH₃ sensor — gamitin ang existing pH + temp readings para mag-estimate ng unionized ammonia risk. Ang ammonia sa tubig ay nasa dalawang form: NH₄⁺ (ionized/hindi nakakapait) at NH₃ (unionized/nakakapait). Ang ratio nila ay depende sa pH at temperature.
+>
+> #### Formula (Emerson/Khoo Method):
+> **Step 1:** I-calculate ang `pKa` (temperature-dependent):
+> ```
+> pKa ≈ 0.09018 + 2729.92/(T+273.15) + 4.4106 × log₁₀((T+273.15)/298.15)
+> ```
+> kung `T` = temperature in °C
+>
+> **Step 2:** I-calculate ang fraction ng unionized ammonia:
+> ```
+> f(NH₃) = 1 / (1 + 10^((pKa - pH)))
+> ```
+>
+> **Step 3:** Kung may TAN (Total Ammonia Nitrogen) measurement — even periodic lab tests:
+> ```
+> [NH₃] = TAN × f(NH₃)
+> ```
+>
+> #### Practical Implementation:
+> | Scenario | Paano |
+> |----------|-------|
+> | **Walang TAN** | Gamitin lang ang pH + temp bilang **risk indicator** — high pH + warm temp = higher risk |
+> | **May periodic TAN** | I-compute ang exact NH₃ concentration gamit ang formula sa itaas |
+> | **Critical threshold** | ≥ 0.1 ppm unionized NH₃ = danger zone for mud crabs |
+>
+> #### Quick Reference Table (CRAB_GRID Conditions):
+> Sa mga common condition sa project (27–30°C, pH 7.5–8.5):
+>
+> | pH | Temp (°C) | Risk Level |
+> |----|-----------|------------|
+> | 7.5 | 27 | Low |
+> | 8.0 | 28 | Moderate |
+> | 8.5 | 30 | High |
+>
+> #### Dashboard Warning Logic:
+> - **Alert Level:** pH > 8.2 AND temp > 28°C
+> - **Critical:** pH > 8.4 AND temp > 29°C
+> - I-logger ang pH + temp continuously, TAN samples periodically (weekly/biweekly lab test)
+>
+> #### Recommendation for Thesis:
+> 1. Regular lab test ng TAN — weekly o biweekly — para ma-validate ang estimates
+> 2. Dashboard warning kapag pH > 8.2 at temp > 28°C = alert level
+> 3. I-logger ang pH + temp continuously, TAN samples periodically
+>
+> **Reference:** Millero, F.J. et al. "The equilibrium constants of carbonic acid, boric acid and related species" (Chemical Reviews, 2006) — standard method for ammonia speciation.
 
 ## Deployment Corrections and Verification Gates
 

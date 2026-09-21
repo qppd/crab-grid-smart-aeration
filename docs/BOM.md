@@ -29,7 +29,54 @@
 
 > **Targets:** the SEAFDEC/AQD ranges these sensors were chosen against are tabulated in [`Components.md`](Components.md). The one gap is unionized NH₃ (≤ 0.1 ppm) — no affordable sensor exists. pH + temperature can estimate the toxic fraction/risk only; an absolute NH₃ concentration requires measured Total Ammonia Nitrogen (TAN) or a laboratory test. |
 >
-> **Start with two sensors:** buy **#5 (EC/salinity)** + **#7 (DS18B20)** first (₱5,647), then add pH and DO as budget allows. Salinity + temperature drive the automated first-aid loop (rain-dilution scenario).
+|> **Start with two sensors:** buy **#5 (EC/salinity)** + **#7 (DS18B20)** first (₱5,647), then add pH and DO as budget allows. Salinity + temperature drive the automated first-aid loop (rain-dilution scenario).
+|>
+|> **Ammonia Risk Estimation (pH + Temperature Only):** Walang direct NH₃ sensor — gamitin ang existing pH + temp readings para mag-estimate ng unionized ammonia risk. Ang ammonia sa tubig ay nasa dalawang form: NH₄⁺ (ionized/hindi nakakapait) at NH₃ (unionized/nakakapait). Ang ratio nila ay depende sa pH at temperature.
+|>
+|> ### Formula (Emerson/Khoo Method):
+|> **Step 1:** I-calculate ang `pKa` (temperature-dependent):
+|> ```
+|> pKa ≈ 0.09018 + 2729.92/(T+273.15) + 4.4106 × log₁₀((T+273.15)/298.15)
+|> ```
+|> kung `T` = temperature in °C
+|>
+|> **Step 2:** I-calculate ang fraction ng unionized ammonia:
+|> ```
+|> f(NH₃) = 1 / (1 + 10^((pKa - pH)))
+|> ```
+|>
+|> **Step 3:** Kung may TAN (Total Ammonia Nitrogen) measurement — even periodic lab tests:
+|> ```
+|> [NH₃] = TAN × f(NH₃)
+|> ```
+|>
+|> ### Practical Implementation:
+|> | Scenario | Paano |
+|> |----------|-------|
+|> | **Walang TAN** | Gamitin lang ang pH + temp bilang **risk indicator** — high pH + warm temp = higher risk |
+|> | **May periodic TAN** | I-compute ang exact NH₃ concentration gamit ang formula sa itaas |
+|> | **Critical threshold** | ≥ 0.1 ppm unionized NH₃ = danger zone for mud crabs |
+|>
+|> ### Quick Reference Table (CRAB_GRID Conditions):
+|> Sa mga common condition sa project (27–30°C, pH 7.5–8.5):
+|>
+|> | pH | Temp (°C) | Risk Level |
+|> |----|-----------|------------|
+|> | 7.5 | 27 | Low |
+|> | 8.0 | 28 | Moderate |
+|> | 8.5 | 30 | High |
+|>
+|> ### Dashboard Warning Logic:
+|> - **Alert Level:** pH > 8.2 AND temp > 28°C
+|> - **Critical:** pH > 8.4 AND temp > 29°C
+|> - I-logger ang pH + temp continuously, TAN samples periodically (weekly/biweekly lab test)
+|>
+|> ### Recommendation for Thesis:
+|> 1. Regular lab test ng TAN — weekly o biweekly — para ma-validate ang estimates
+|> 2. Dashboard warning kapag pH > 8.2 at temp > 28°C = alert level
+|> 3. I-logger ang pH + temp continuously, TAN samples periodically
+|>
+|> **Reference:** Millero, F.J. et al. "The equilibrium constants of carbonic acid, boric acid and related species" (Chemical Reviews, 2006) — standard method for ammonia speciation.
 
 ## 3. Actuators (Aeration + Pumps)
 
@@ -77,7 +124,7 @@
 | 22 | **PG7/IP68 nylon cable glands** (10-pc kit) | 1 kit | ₱78–120 | 4.8 stars (9,383 ratings) | [Shopee listing](https://shopee.ph/Nylon-Cable-Gland-10pcs.-PG7-~-PG63-IP68-Waterproof-Connector-Durable-Plastic-Cable-Fitting-i.1468298505.40724321556) | Item 18 buys the IP65 enclosure but no feedthroughs — sensor/pump cables through plain drilled holes destroy the IP rating |
 | 23 | **pH buffer calibration set 4.01 / 6.86 / 9.18** | 1 set | ₱275 | see listing | [Shopee listing](https://shopee.ph/pH-Calibration-Solution-pH-4.01-6.86-9.18-Buffer-for-pH-Meter-Hydroponics-Lab-Professional-Grade-i.911703494.48855977022) | PH-4502C is factory-offset only — 2-point calibration (4.01 + 6.86) is required before any pH reading is meaningful; re-calibrate every 2–4 weeks |
 | 24 | **EC calibration standards: 1.413 mS/cm (1413 µS/cm) + 12.88 mS/cm** | 2 bottles | ~₱300–600 | check listing; buy ≥ 4.7 stars | [Shopee search: EC 1.413 mS/cm solution](https://shopee.ph/search?keyword=ec%20calibration%20solution%201.413) · [Shopee search: EC 12.88 mS/cm solution](https://shopee.ph/search?keyword=ec%20calibration%20solution%2012.88) | Follow the DFRobot K=10 two-point procedure. 12.88 mS/cm is a conductivity calibration standard, not 35 ppt seawater; convert calibrated EC to salinity with the manufacturer/PSS-78 method. |
-| 25 | **DO probe spare membrane caps + electrolyte refill** (SEN0237-A consumables) | 1 kit | ~₱500–1,000 | check DFRobot store | [DFRobot wiki (maintenance)](https://wiki.dfrobot.com/sen0237-a/) · [Shopee search](https://shopee.ph/search?keyword=dissolved%20oxygen%20probe%20membrane) | Galvanic DO probes consume membrane caps + electrolyte — without spares the ₱12k sensor goes dead mid-thesis. Calibrate in water-saturated air (single point) before each deployment, with only one probe a failed membrane means losing the DO trigger until it is replaced |
+| 25 | **DO probe spare membrane caps + electrolyte refill** (SEN0237-A consumables) | 1 kit | ~₱500–1,000 | check DFRobot store | [DFRobot wiki (maintenance)](https://wiki.dfrobot.com/sen0237-a/) · [Shopee search](https://shopee.ph/search?keyword=dissolved%20oxygen%20probe%20membrane) | Galvanic DO probes consume membrane caps + electrolyte — without spares the ₱12k sensor goes dead mid-project. Calibrate in water-saturated air (single point) before each deployment, with only one probe a failed membrane means losing the DO trigger until it is replaced |
 | 26 | **pH electrode storage solution (KCl)** | 1 bottle | ~₱150–300 | check listing; buy ≥ 4.7 stars | [Shopee search: KCl storage solution](https://shopee.ph/search?keyword=ph%20electrode%20storage%20solution%20kcl) | The E-201-C electrode dies in weeks if stored dry or in distilled water — KCl storage is what makes the ₱1,395 probe last the project |
 | 27 | **Handheld salinity refractometer 0–100 ppt, ATC** | 1 | ~₱500–800 | 4.7 stars (47,728 ratings) | [Shopee listing](https://shopee.ph/Salinity-Refractometer-For-Seawater-And-Marine-Fishkeeping-Aquarium-0-100-Ppt-With-Automatic-Temperature-Compensation-i.119376804.27414109823) | Ground-truth cross-check for the EC sensor during calibration and for verifying brine mixing after rain events — no power needed |
 | 28 | **Brine reserve for a controlled salinity experiment only: rock/feed-grade salt ~25 kg + sealed 100–120 L drum** | 1 set | ~₱1,400–1,700 | check listing | [Shopee search: rock salt](https://shopee.ph/search?keyword=rock%20salt%20feed%20grade) | 25 kg salt can make roughly 90 L of saturated brine (about 26 wt%) under typical conditions. Do not present dosing into open slotted cages as reliable salinity correction: tidal flushing and density-driven sinking will remove the dose. Use temporary isolation sleeves or a closed-loop/RAS enclosure, and log tide/current plus pre/post salinity at multiple points. |
@@ -97,7 +144,7 @@
 
 **Mode logic (firmware):** AUTO on boot, reset or link loss with aeration ON · MANUAL auto-reverts to AUTO after 5 min without a command · DO below 3 ppm overrides MANUAL and forces aeration on · mode and pump state echoed in every uplink. **Downlink payload (2 bytes, wrapped by the full frame in [`FIRMWARE.md`](FIRMWARE.md) §5.2):** byte 0 = mode (0 AUTO, 1 MANUAL, 2 OFF), byte 1 = pump bitmap (air pumps 1/2, bilge 1/2).
 
-**Webapp (free tier):** **Firebase Realtime Database** + Firebase Auth, with Next.js on Vercel — no running cost at this scale, and RTDB's JSON tree with `onValue()` listeners suits live telemetry better than a document store here. Keep live state in one node (`devices/<id>/state`) for the UI and append history under a trimmed `logs/<id>/<timestamp>` path, or export CSV, so the thesis still has data to chart. Server env vars: `FIREBASE_DATABASE_URL`, `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`.
+**Webapp (free tier):** **Firebase Realtime Database** + Firebase Auth, with Next.js on Vercel — no running cost at this scale, and RTDB's JSON tree with `onValue()` listeners suits live telemetry better than a document store here. Keep live state in one node (`devices/<id>/state`) for the UI and append history under a trimmed `logs/<id>/<timestamp>` path, or export CSV, so data to chart. Server env vars: `FIREBASE_DATABASE_URL`, `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`.
 
 ---
 
@@ -120,7 +167,7 @@
 | 1 | **LoRa band / regulatory status** | 915 MHz (E22-900M22S / SX1262) — the Philippine NTC licence-free SRD band for low-duty telemetry; both ends on the same band/freq/SF. Confirm maximum EIRP and type-approval before deployment. No TTN/ChirpStack — the dashboard talks to the **house bridge node** over WiFi. |
 | 2 | **Voltage chain and mains safety** | 220V AC (household solar, 24/7) → shore-end 30 mA RCD + breaker (#13) → weatherproof feedthroughs → **12V 30 A PSU (#14)** → 12V pumps/relays directly; LM2596S 24V/12V → 5V USB step-down module (#19) for the camera node and the ESP32 DevKit 5V pin (onboard 3.3 V LDO feeds the E22-900M22S — never at 5V). No on-site panel/MPPT/battery. Licensed-electrician installation, PEC review, IP67/IP68 connectors, drip loops, no submerged joints, monthly RCD test, and measured fuse/conductor coordination are deployment gates. |
 | 3 | **Camera connectivity** | ESP32-CAM uses **WiFi, not LoRa** (video can't fit LoRa bandwidth). Options: (a) farmer connects phone to camera AP during pond visits, (b) put camera at the house with the bridge node where WiFi exists, (c) upgrade to an LTE camera — budget decision for the panel |
-| 4 | **Ammonia sensing gap** | No affordable verified NH₃ sensor on Shopee. Industry option: DFRobot RS485 NH₄⁺ sensor (~$209 / ~₱12k, [dfrobot.com](https://www.dfrobot.com/blog-20760.html)). **Thesis workaround:** pH + temperature can estimate the toxic fraction/risk only; an absolute NH₃ concentration requires measured Total Ammonia Nitrogen (TAN) or a laboratory test. |
+| 4 | **Ammonia sensing gap** | No affordable verified NH₃ sensor on Shopee. Industry option: DFRobot RS485 NH₄⁺ sensor (~$209 / ~₱12k, [dfrobot.com](https://www.dfrobot.com/blog-20760.html)). **Workaround:** pH + temperature can estimate the toxic fraction/risk only; an absolute NH₃ concentration requires measured Total Ammonia Nitrogen (TAN) or a laboratory test. |
 | 5 | **Sensor ADC levels** | PH-4502C outputs up to ~5V with 2.5V offset → use 10 kΩ series + 18 kΩ shunt (5 V → about 3.21 V) or an ADS1115 I2C ADC with 3.3 V level shifting. DFRobot EC/DO boards output ≤3.4V → direct |
 | 6 | **Overheating** | Boxes are shaded under the frame and stay in water contact; frame/gantry surfaces are non-plastic, so no bare plastic sits in direct sun |
 | 7 | **Load vs. relay & supply** | Bilge 3–5A, MPQ-03 air pump ~3.5A each — all ≤ 10A per relay channel; 8-ch module covers all loads + spares. Peak ≈ 2×air(7A) + 1×bilge(~5A) + node = ~13 A worst-case burst at 12 V (~3.5×30 A PSU, and contacts comfortably inside the 10 A relay rating). |
@@ -200,7 +247,7 @@ Apply these cuts in order until the running total is under ₱50,000:
 |-------|-----|-------|------------------|
 | 1 | Camera #3 + LM2596S module #19 | ₱748 | Overhead monitoring → visual checks during pond visits. Nothing else depends on it |
 | 2 | DO kit #8 + membranes #25 | ₱12,500–14,199 | The DO trigger. Until the probe is bought, run night aeration on a fixed schedule (e.g. 30 min on / 30 min off) and keep the temperature + salinity logic |
-| 3 | Dev/spare node set (1 × ESP32 #1 + E22-900M22S/antenna #2) | ₱838 | No hot spare if the controller dies mid-defense |
+| 3 | Dev/spare node set (1 × ESP32 #1 + E22-900M22S/antenna #2) | ₱838 | No hot spare if the controller dies mid-project |
 | 4 | Second bilge pump #11 | ~₱649 | Two-zone salinity correction becomes single-zone (one grid half) |
 | 5 | pH kit #6 + buffers #23 | ₱1,670 | pH monitoring; the NH₃ estimate loses its pH input |
 

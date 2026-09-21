@@ -12,7 +12,7 @@ The webapp is a **Next.js + Firebase Realtime Database + Auth** application on V
 | Control | AUTO / MANUAL / OFF mode selector, per-pump overrides in MANUAL, ACK/NAK feedback, MANUAL revert countdown |
 | Parameters | Threshold editor with range validation, written to the device config and relayed to the float on the next downlink |
 | Alerts | DO emergency, threshold breach, heartbeat loss, sensor fault, command NAK/expired |
-| History | Trimmed log in RTDB, 24 h / 7 d charts, CSV export for the thesis |
+| History | Trimmed log in RTDB, 24 h / 7 d charts, CSV export for data |
 | Admin | Device registry, farmer/admin roles via Firebase Auth, calibration due-date reminders |
 
 ## 2. Realtime Database Schema
@@ -48,7 +48,7 @@ users/
 2. **Control** — mode selector with confirmations; per-pump switches enabled only in MANUAL; each command shows its ACK/NAK result and expiry; MANUAL shows a live revert countdown.
 3. **Parameters** — threshold editor (§6 validation table); writes land in `config/thresholds` with `issuedBy` + timestamp, and the bridge relays them as a config downlink; firmware clamps values again (defense in depth).
 4. **Alerts** — alert list and history; in-app banners now, email/SMS hooks later.
-5. **History** — charts (24 h / 7 d) from `logs/`, CSV export for the thesis charts.
+5. **History** — charts (24 h / 7 d) from `logs/`, CSV export for data charts.
 6. **Devices** — registry and roles; admins manage devices and users.
 7. **Camera** — instructions to join the camera's WiFi AP (`crabcam-<id>`) during pond visits; the camera is WiFi-only by design and never streams over LoRa.
 
@@ -115,4 +115,4 @@ Command latency is one uplink cycle (≤ 60 s); DO emergencies bypass the schedu
 1. **Free tier budget:** keep live state in one node, trim `logs/<id>` (e.g., last 7 days) so RTDB stays inside the Spark plan.
 2. **Security:** Auth-only database rules ([`SETUP.md`](SETUP.md) §5); the service-account key exists only server-side as Vercel env vars — never in client code.
 3. **Offline behavior:** if the house internet drops, the dashboard goes stale but the bridge keeps alarming locally and the float keeps running AUTO.
-4. **Auditability:** every command and threshold edit records `issuedBy` and a timestamp for the thesis log.
+4. **Auditability:** every command and threshold edit records `issuedBy` and a timestamp for the audit log.

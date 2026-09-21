@@ -2,7 +2,7 @@
 
 **Project:** Solar Automated LoRa-Integrated Mud Crab Aeration Network with Crab Grid Observation
 
-This document presents the operational flowchart of the system in the format required for the undergraduate thesis manuscript. It traces one complete control cycle: sensor acquisition and automatic first-aid logic at the float node, LoRa transmission to the house bridge node, telemetry storage in Firebase, dashboard command relay, and the fail-safe mode rules enforced by the firmware ([`FIRMWARE.md`](FIRMWARE.md) §2).
+This document presents the operational flowchart of the system in the format required . It traces one complete control cycle: sensor acquisition and automatic first-aid logic at the float node, LoRa transmission to the house bridge node, telemetry storage in Firebase, dashboard command relay, and the fail-safe mode rules enforced by the firmware ([`FIRMWARE.md`](FIRMWARE.md) §2).
 
 ## 1. Flowchart
 

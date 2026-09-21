@@ -2,7 +2,7 @@
 
 **Project:** Solar Automated LoRa-Integrated Mud Crab Aeration Network with Crab Grid Observation
 
-This document presents the hardware block diagram in the format required for the undergraduate thesis manuscript. It shows the float node's power chain, controller, sensor cluster, LoRa radio, relay-driven actuators, and local interface, plus the radio link to the house bridge. Pin numbers follow the verified map in [`WIRING.md`](WIRING.md) §3.
+This document presents the hardware block diagram in the format required . It shows the float node's power chain, controller, sensor cluster, LoRa radio, relay-driven actuators, and local interface, plus the radio link to the house bridge. Pin numbers follow the verified map in [`WIRING.md`](WIRING.md) §3.
 
 ## 1. Block Diagram
 

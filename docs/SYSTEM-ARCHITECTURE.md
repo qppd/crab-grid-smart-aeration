@@ -2,7 +2,7 @@
 
 **Project:** Solar Automated LoRa-Integrated Mud Crab Aeration Network with Crab Grid Observation
 
-This document describes the system architecture in the format required for the undergraduate thesis manuscript. The system is organized into five layers, from pond-side sensing to the cloud-hosted dashboard, connected by a 915 MHz LoRa point-to-point link where no WiFi exists.
+This document describes the system architecture in the format required . The system is organized into five layers, from pond-side sensing to the cloud-hosted dashboard, connected by a 915 MHz LoRa point-to-point link where no WiFi exists.
 
 ## 1. Architecture Diagram
 

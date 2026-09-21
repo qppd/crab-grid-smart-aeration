@@ -25,7 +25,7 @@ This guide takes a builder from an empty desk to a powered, flashing, cloud-conn
 
 ## 3. Hardware Ordering
 
-Order by phase so cash flow matches the thesis timeline (prices and links in [`BOM.md`](BOM.md)):
+Order by phase so cash flow matches the project timeline (prices and links in [`BOM.md`](BOM.md)):
 
 | Phase | Contents | Rough cost |
 |-------|----------|-----------|

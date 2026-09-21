@@ -91,7 +91,7 @@ Rule: B LOW → OFF; else A LOW → MANUAL; else AUTO. OFF exists for servicing 
 
 | From | To | Conductor | Notes |
 |------|----|-----------|-------|
-| pH board analog out | GPIO 34 | Shielded 2-core | Through 10 kΩ series + 18 kΩ shunt divider (5 V → ~3.21 V), or an ADS1115 I2C ADC for thesis-grade resolution |
+| pH board analog out | GPIO 34 | Shielded 2-core | Through 10 kΩ series + 18 kΩ shunt divider (5 V → ~3.21 V), or an ADS1115 I2C ADC for professional-grade resolution |
 | EC board analog out | GPIO 35 | Shielded 2-core | Output ≤ 3.4 V — direct to ADC1 |
 | DO board analog out | GPIO 36 | Shielded 2-core | Output ≤ 3.4 V — direct to ADC1 |
 | DS18B20 ×2 | GPIO 16 | Shielded 3-core | Parallel on one 1-Wire bus; 4.7 kΩ pull-up to 3.3 V at the hub |
