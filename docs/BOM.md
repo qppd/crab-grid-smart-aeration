@@ -9,7 +9,7 @@
 |---|------|-----|-----------|-------------------|-----|----------------|
 | 1 | **ESP32 DevKit, 38-pin (ESP32-WROOM-32)** — main controller node (float) | 3 (float node + house bridge + spare/dev) | ₱349 ea | Makerlab PH — in stock | [Makerlab: Type-C ESP32 30/38-pin](https://makerlab.ph/search?q=esp32) · alt ₱350: [30/38-pin board](https://makerlab.ph/search?q=esp32) | WiFi+BT MCU reads all analog/digital water sensors; 3.3V logic — sensor boards below output ≤3.4V; WiFi stays OFF on the float. **Pin map avoids all WiFi (ADC2) and boot-strap conflicts — see [Components.md](Components.md) §Controller pin map** |
 | 2 | **EBYTE E22-900M22S (SX1262, 915 MHz) LoRa module + 915 MHz antenna (₱100 ea)** — one per node: float, house bridge, spare | 3 | ₱489 ea (verify current listing) | Makerlab PH — search "lora" | [Makerlab: LoRa SX1262](https://makerlab.ph/search?q=lora) · [915 MHz antenna](https://makerlab.ph/search?q=lora) | SPI wiring (SCK 18/MISO 19/MOSI 23/NSS 5, RST 14, **DIO1 26, BUSY 17**) — SX1262 needs a BUSY pin, not DIO0. SX1262 delivers up to +22 dBm on the 915 MHz PH licence-free SRD band. Confirm measured EIRP and NTC type-approval before deployment. **3.3V logic only — never apply 5V to the SPI pins.** Never power without an antenna — instant PA damage. Use **RadioLib**'s SX1262 driver (`sandeepmistry/LoRa` does not support SX126x). |
-| 3 | **ESP32-CAM** (OV2640, WiFi/BT) — overhead camera node | 1 | ₱649 | Makerlab PH — in stock | [Makerlab: ESP32-CAM OV2640](https://makerlab.ph/search?q=esp32) | Streams over WiFi only — see **Compatibility Notes #3** |
+| 3 | **ESP32-CAM-MB** (OV2640, WiFi/BT) — overhead camera node | 1 | ₱649 | Makerlab PH — in stock | [Makerlab: ESP32-CAM-MB OV2640](https://makerlab.ph/search?q=esp32) | Streams over WiFi only — see **Compatibility Notes #3** |
 | 4 | **8-Channel Relay Module, 12V coil, optocoupler** — drives air pumps + bilge pumps | 1 | ₱273 | 4.8 stars (12,201 ratings) | [Shopee listing](https://shopee.ph/DC-12V-8-Channel-Relay-Module-with-Optocoupler-Isolation-PLC-Control-Relay-Output-8-Way-Relay-Module-for-Arduino-i.266699902.19079723116) | **8-ch, not 4-ch**: 2 air pumps + 2 bilge pumps = 4 loads, so a 4-ch board leaves no spare channels for cage valves or a second DO stage; 10A contacts ≥ pump inrush; choose **low-level trigger** for ESP32 3.3V GPIO |
 
 ## 2. Water Quality Sensors
@@ -63,7 +63,7 @@
 
 | # | Item | Qty | Est. Price | Rating (verified) | URL | Why needed |
 |---|------|-----|-----------|-------------------|-----|------------|
-| 19 | **LM2596S 24V/12V → 5V USB step-down module (HW-688 / HCW-P715)** — camera node power | 1 | ₱99 | 4.9 stars (715 ratings) · LazMall | [Lazada listing](https://www.lazada.com.ph/products/24v12v-to-5v-usb-mobile-phone-dc-dc-step-down-module-lm2596s-hw-688-hcw-p715-do-not-use-for-raspberry-pi-4-i284590120-s446364184.html) | Accepts the 12 V supply and provides a 5 V USB output for the ESP32-CAM. Verify the output voltage and polarity before connecting. **Do not use for Raspberry Pi 4.** |
+| 19 | **LM2596S 24V/12V → 5V USB step-down module (HW-688 / HCW-P715)** — camera node power | 1 | ₱99 | 4.9 stars (715 ratings) · LazMall | [Lazada listing](https://www.lazada.com.ph/products/24v12v-to-5v-usb-mobile-phone-dc-dc-step-down-module-lm2596s-hw-688-hcw-p715-do-not-use-for-raspberry-pi-4-i284590120-s446364184.html) | Accepts the 12 V supply and provides a 5 V USB output for the ESP32-CAM-MB. Verify the output voltage and polarity before connecting. **Do not use for Raspberry Pi 4.** |
 | 21 | **DC blade fuse + holder set** (provisional main/controller/pump ratings) | 1 set | ₱50–150 | check listing; buy ≥ 4.7 stars | [Shopee search: blade fuse holder](https://shopee.ph/search?keyword=blade%20fuse%20holder%20waterproof) | A 12 V supply feeding unprotected pump wiring on a float is a melt/fire risk. Do not finalize the 15 A/5 A/10 A values from estimates: measure running and inrush current, check conductor ampacity and temperature rise, then size one main fuse and per-branch fuses to the protected conductors and loads. |
 | 22 | **PG7/IP68 nylon cable glands** (10-pc kit) | 1 kit | ₱78–120 | 4.8 stars (9,383 ratings) | [Shopee listing](https://shopee.ph/Nylon-Cable-Gland-10pcs.-PG7-~-PG63-IP68-Waterproof-Connector-Durable-Plastic-Cable-Fitting-i.1468298505.40724321556) | Item 18 buys the IP65 enclosure but no feedthroughs — sensor/pump cables through plain drilled holes destroy the IP rating |
 | 23 | **pH buffer calibration set 4.01 / 6.86 / 9.18** | 1 set | ₱275 | see listing | [Shopee listing](https://shopee.ph/pH-Calibration-Solution-pH-4.01-6.86-9.18-Buffer-for-pH-Meter-Hydroponics-Lab-Professional-Grade-i.911703494.48855977022) | PH-4502C is factory-offset only — 2-point calibration (4.01 + 6.86) is required before any pH reading is meaningful; re-calibrate every 2–4 weeks |
@@ -73,7 +73,7 @@
 | 27 | **Handheld salinity refractometer 0–100 ppt, ATC** | 1 | ~₱500–800 | 4.7 stars (47,728 ratings) | [Shopee listing](https://shopee.ph/Salinity-Refractometer-For-Seawater-And-Marine-Fishkeeping-Aquarium-0-100-Ppt-With-Automatic-Temperature-Compensation-i.119376804.27414109823) | Ground-truth cross-check for the EC sensor during calibration and for verifying brine mixing after rain events — no power needed |
 | 28 | **Brine reserve for a controlled salinity experiment only: rock/feed-grade salt ~25 kg + sealed 100–120 L drum** | 1 set | ~₱1,400–1,700 | check listing | [Shopee search: rock salt](https://shopee.ph/search?keyword=rock%20salt%20feed%20grade) | 25 kg salt can make roughly 90 L of saturated brine (about 26 wt%) under typical conditions. Do not present dosing into open slotted cages as reliable salinity correction: tidal flushing and density-driven sinking will remove the dose. Use temporary isolation sleeves or a closed-loop/RAS enclosure, and log tide/current plus pre/post salinity at multiple points. |
 
-> Dev-time only (not system hardware): a USB-TTL adapter (~₱80) to flash the ESP32-CAM if you don't already own one.
+> Dev-time only (not system hardware): a USB-TTL adapter (~₱80) to flash the ESP32-CAM-MB if you don't already own one.
 
 ---
 
@@ -106,7 +106,7 @@
 |---|-------|---------|
 | 1 | **LoRa band / regulatory status** | 915 MHz (E22-900M22S / SX1262) — the Philippine NTC licence-free SRD band for low-duty telemetry; both ends on the same band/freq/SF. Confirm maximum EIRP and type-approval before deployment. No TTN/ChirpStack — the dashboard talks to the **house bridge node** over WiFi. |
 | 2 | **Voltage chain and mains safety** | 220V AC (household solar, 24/7) → shore-end 30 mA RCD + breaker (#13) → weatherproof feedthroughs → **12V 30 A PSU (#14)** → 12V pumps/relays directly; LM2596S 24V/12V → 5V USB step-down module (#19) for the camera node and the ESP32 DevKit 5V pin (onboard 3.3 V LDO feeds the E22-900M22S — never at 5V). No on-site panel/MPPT/battery. Licensed-electrician installation, PEC review, IP67/IP68 connectors, drip loops, no submerged joints, monthly RCD test, and measured fuse/conductor coordination are deployment gates. |
-| 3 | **Camera connectivity** | ESP32-CAM uses **WiFi, not LoRa** (video can't fit LoRa bandwidth). Options: (a) farmer connects phone to camera AP during pond visits, (b) put camera at the house with the bridge node where WiFi exists, (c) upgrade to an LTE camera — budget decision for the panel |
+| 3 | **Camera connectivity** | ESP32-CAM-MB uses **WiFi, not LoRa** (video can't fit LoRa bandwidth). Options: (a) farmer connects phone to camera AP during pond visits, (b) put camera at the house with the bridge node where WiFi exists, (c) upgrade to an LTE camera — budget decision for the panel |
 | 4 | **Ammonia sensing gap** | No affordable verified NH₃ sensor on Shopee. Industry option: DFRobot RS485 NH₄⁺ sensor (~$209 / ~₱12k, [dfrobot.com](https://www.dfrobot.com/blog-20760.html)). **Workaround:** pH + temperature can estimate the toxic fraction/risk only; an absolute NH₃ concentration requires measured Total Ammonia Nitrogen (TAN) or a laboratory test. |
 | 5 | **Sensor ADC levels** | PH-4502C outputs up to ~5V with 2.5V offset → use 10 kΩ series + 18 kΩ shunt (5 V → about 3.21 V) or an ADS1115 I2C ADC with 3.3 V level shifting. DFRobot EC/DO boards output ≤3.4V → direct |
 | 6 | **Overheating** | Boxes are shaded under the frame and stay in water contact; frame/gantry surfaces are non-plastic, so no bare plastic sits in direct sun |
@@ -126,7 +126,7 @@
 | Air pumps (RESUN MPQ-03, 35W each; 1 duty / 1 N+1 standby) | ~35–70 | 16–24 h (incl. night) | ~560–840 worst case |
 | Bilge pumps (salinity events) | ~60 | intermittent (~1 h/day avg) | ~60 |
 | House bridge node (ESP32 + E22-900M22S, at house w/ mains) | ~1.5 | 24 h | 0 (house supply) |
-| ESP32-CAM node | ~1.5 | visits only | ~10 |
+| ESP32-CAM-MB node | ~1.5 | visits only | ~10 |
 | **Total on-site DC load** | | | **≈ 430–700 Wh/day** |
 | **On-site supply: 12V 30 A PSU (#14)** | 360 W | — | peak ≈ 100 W ≈ 8.4 A → ~3.5× headroom for inrush |
 | **Supply: household solar → 220V AC** | array + **> 600 Ah** bank + inverter | 24/7 | ≈ 5.8 kWh usable vs ~0.6 kWh/night → **~8–10× margin** |
@@ -136,7 +136,7 @@
 
 | Category | Est. Cost |
 |----------|----------|
-| Boards & connectivity (3× ESP32, 3× E22-900M22S+antenna, ESP32-CAM, 8-ch relay) | ₱3,436 |
+| Boards & connectivity (3× ESP32, 3× E22-900M22S+antenna, ESP32-CAM-MB, 8-ch relay) | ₱3,436 |
 | Sensors (Tier 1: EC + 2× DS18B20 → full set incl. pH + DO) | ₱5,647 → ₱19,042–20,241 |
 | Aeration + pumps (2× RESUN MPQ-03 air pumps, air stones/manifold, 2× bilge) | ₱3,688 |
 | Power — AC drop + protection + 12V supply (outdoor AC run, RCD/breaker, 12V 30 A PSU) | ₱2,900–4,600 |

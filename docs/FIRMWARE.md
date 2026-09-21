@@ -10,7 +10,7 @@ Design reference for the three ESP32 firmware targets. The controlling principle
 firmware/
 ├── main_controller/    # Float node: sensors, control loop, LoRa
 ├── house_bridge/       # Bridge node: LoRa <-> Firebase relay + alarms
-├── camera_node/        # ESP32-CAM: WiFi AP stream only
+├── camera_node/        # ESP32-CAM-MB: WiFi AP stream only
 └── shared/
     ├── pins.h          # Pin map (verified in WIRING.md §3)
     ├── packets.h       # Frame layouts and CRC-8
@@ -124,7 +124,7 @@ Byte 0 device ID; byte 1 `0x06` ACK or `0x15` NAK; byte 2 echoed command sequenc
 
 Dashboard-side edits to thresholds arrive as config downlinks and are clamped to these ranges ([`APP.md`](APP.md) §6).
 
-## 10. Camera Node (ESP32-CAM)
+## 10. Camera Node (ESP32-CAM-MB)
 
 - Uses the stock AI-Thinker OV2640 pinout; **no LoRa** — video cannot fit the LoRa link.
 - Runs a WiFi **access point** (`crabcam-<id>`) joined by the farmer's phone during pond visits.

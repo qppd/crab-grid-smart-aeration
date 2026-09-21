@@ -22,7 +22,7 @@ flowchart TB
 |-------|-----------|-----|------|
 | Edge controller | ESP32 DevKit 38-pin (ESP32-WROOM-32) | 3 (float, bridge, spare/dev) | Runs control logic and the LoRa link |
 | Radio | EBYTE E22-900M22S (SX1262, 915 MHz) | 3 | Long-range point-to-point telemetry |
-| Observation | ESP32-CAM (OV2640) | 1 | Overhead visual monitoring over a WiFi AP |
+| Observation | ESP32-CAM-MB (OV2640) | 1 | Overhead visual monitoring over a WiFi AP |
 | Sensing | DFRobot EC K=10, pH E-201-C + PH-4502C, DS18B20 ×2, DO SEN0237-A | 1 ea (temp ×2) | Water-quality measurement |
 | Actuation | 8-channel relay, 2 × RESUN MPQ-03 air pumps, 2 × bilge pumps 1100 GPH | 1 set | Aeration and circulation |
 | Power | 220 V AC drop + 30 mA RCD, 12 V 30 A PSU, LM2596S 5 V module | 1 set | Household-solar-fed power chain |

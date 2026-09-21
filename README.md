@@ -95,7 +95,7 @@ The prototype is powered from the **household's existing solar installation** (2
                   │                  │      │      │                   │
           ┌───────┴────────┐  ┌─────┴────┐ │ ┌────┴───────┐  ┌───────┴──────┐
           │  Water Sensors │  │  Relay   │ │ │  Camera    │  │  House Solar │
-          │  · EC/Salinity │  │  Module  │ │ │  ESP32-CAM │  │  AC Feed     │
+          │  · EC/Salinity │  │  Module  │ │ │  ESP32-CAM-MB │  │  AC Feed     │
           │  · pH Probe    │  │  (8-Ch)  │ │ │  OV2640    │  │  · 220V 24/7 │
           │  · DS18B20 ×2  │  └────┬─────┘ │ └────────────┘  │  · RCD 30mA  │
           │  · DO Sensor   │       │       │                  │  · 12V 30A   │
@@ -139,7 +139,7 @@ The prototype is powered from the **household's existing solar installation** (2
 |-----------|--------------|---------|
 | **ESP32 DevKit 38-pin + EBYTE E22-900M22S (SX1262)** | ESP32-WROOM-32 + 915 MHz LoRa (SX1262, up to +22 dBm) | Main controller node — reads all sensors, runs automation logic, communicates over point-to-point LoRa on the 915 MHz ISM band. Verify measured EIRP and NTC type-approval before deployment. |
 | **House Bridge Node (ESP32 + E22-900M22S)** | Same radio stack, at the house | LoRa ⇄ WiFi bridge — pushes float telemetry to the Firebase dashboard and relays dashboard commands back down over LoRa |
-| **ESP32-CAM** | OV2640, WiFi/BT | Overhead camera node for visual monitoring |
+| **ESP32-CAM-MB** | OV2640, WiFi/BT | Overhead camera node for visual monitoring |
 | **8-Channel Relay Module** | 12V coil, optocoupler, low-level trigger | Drives aerators and salinity pumps with spare channels |
 | **DFRobot EC/Salinity Sensor** | K=10, 0–100 mS/cm | Measures conductivity/salinity. Use the manufacturer/PSS-78 conversion rather than a fixed 0.66 ppt-per-mS/cm rule; 35 ppt seawater is approximately 53 mS/cm at 25 °C. |
 | **pH Electrode E-201-C** | PH-4502C analog board | Monitors pH (target: 7.5–8.5 for brackish water) |
@@ -169,7 +169,7 @@ The prototype is powered from the **household's existing solar installation** (2
 - **Microcontroller Firmware:** ESP32 (Arduino/PlatformIO) — sensor reading, LoRa P2P communication, relay control
 - **LoRa Link:** point-to-point 915 MHz (E22-900M22S / SX1262) between the float node and the house bridge node — no LoRaWAN server (TTN/ChirpStack) needed. 915 MHz is the Philippine NTC licence-free SRD band for this low-duty telemetry; confirm maximum EIRP and type-approval before deployment.
 - **Dashboard:** a **Next.js + Firebase (Realtime Database + Auth)** webapp — the house bridge node writes sensor data into the Realtime Database, and dashboard commands are read back and relayed down over LoRa
-- **Camera:** WiFi-based streaming from ESP32-CAM (local AP during pond visits)
+- **Camera:** WiFi-based streaming from ESP32-CAM-MB (local AP during pond visits)
 
 ### Control Modes
 
@@ -207,7 +207,7 @@ House bridge node (ESP32 + E22-900M22S) + EC/salinity sensor + refractometer + c
 Protected 220V AC drop from the house (30 mA RCD + breaker) + 12V 30A DC supply + LM2596S camera module + fuses/glands → run the float off the household solar system. A licensed electrician must install and commission the mains side.
 
 ### Phase 4 — Full Feature Set (~₱34,850–46,400)
-DO sensor + pH sensor (+ buffers) + ESP32-CAM camera + second circulation pump + fattening boxes + frame/netting + **4× round foam floats 50×90** + the PVC air/water grid + sensor hub + air pumps + misc hardware + a controlled salinity-test setup → complete system before deployment. Open-water brine correction is not a guaranteed feature.
+DO sensor + pH sensor (+ buffers) + ESP32-CAM-MB camera + second circulation pump + fattening boxes + frame/netting + **4× round foam floats 50×90** + the PVC air/water grid + sensor hub + air pumps + misc hardware + a controlled salinity-test setup → complete system before deployment. Open-water brine correction is not a guaranteed feature.
 
 ---
 
@@ -277,7 +277,7 @@ crab-grid-smart-aeration/
 ├── firmware/              # planned — ESP32 source code
 │   ├── main_controller/  # planned — ESP32+E22-900M22S sensor + LoRa firmware
 │   ├── house_bridge/     # planned — LoRa ⇄ WiFi relay node firmware
-│   └── camera_node/      # planned — ESP32-CAM streaming firmware
+│   └── camera_node/      # planned — ESP32-CAM-MB streaming firmware
 └── dashboard/            # planned — Next.js + Realtime Database webapp
 
 Items marked "planned" are not yet in the repository — create each item as its roadmap phase completes.

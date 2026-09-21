@@ -49,7 +49,7 @@ flowchart LR
     end
 
     BR["House bridge node, ESP32 + E22-900M22S"]
-    V1["ESP32-CAM OV2640, 5 V from LM2596S module, WiFi AP only"]
+    V1["ESP32-CAM-MB OV2640, 5 V from LM2596S module, WiFi AP only"]
 
     PSU --> CORE
     PSU --> K1
@@ -86,7 +86,7 @@ flowchart LR
 | Relay module | 8-channel, 12 V coil, optocoupler, low-level trigger; four channels used, four spare | External 10 kΩ pull-ups hold relays OFF through boot and reset |
 | Actuators | Two RESUN MPQ-03 air pumps (N+1 alternating duty) and two bilge pumps | Branch-fused 12 V feeds; per-cage valves on the water header |
 | Local interface | 3-position AUTO/OFF/MANUAL selector and status LEDs | Active-LOW decode on GPIO 4/21; LEDs on GPIO 22/2 |
-| Camera node | ESP32-CAM OV2640 for overhead visual monitoring | WiFi AP during pond visits; never streams over LoRa |
+| Camera node | ESP32-CAM-MB OV2640 for overhead visual monitoring | WiFi AP during pond visits; never streams over LoRa |
 | House bridge | Second ESP32 + E22 at the house | Relays LoRa ↔ Firebase in both directions |
 
 ## 3. Design Notes

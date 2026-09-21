@@ -13,7 +13,7 @@ flowchart TB
         S2["pH electrode E-201-C with PH-4502C board"]
         S3["DS18B20 temperature probes, 2 units"]
         S4["Dissolved oxygen probe, SEN0237-A"]
-        S5["ESP32-CAM OV2640 overhead camera"]
+        S5["ESP32-CAM-MB OV2640 overhead camera"]
     end
 
     subgraph L2["Layer 2 - Edge Control Layer (float node)"]
