@@ -75,53 +75,6 @@ From **SEAFDEC/AQD (Philippines)** mud crab culture standards:
 | pH | **7.5–8.5** | E-201-C electrode + PH-4502C board |
 | NH₃ (unionized) | **Cannot be calculated from pH + temperature alone**. pH + temperature estimate the toxic fraction/risk; absolute NH₃ requires measured Total Ammonia Nitrogen (TAN) or a laboratory test. | derived risk indicator only |
 
-> ### Ammonia Risk Estimation (pH + Temperature Only)
-> Walang direct NH₃ sensor — gamitin ang existing pH + temp readings para mag-estimate ng unionized ammonia risk. Ang ammonia sa tubig ay nasa dalawang form: NH₄⁺ (ionized/hindi nakakapait) at NH₃ (unionized/nakakapait). Ang ratio nila ay depende sa pH at temperature.
->
-> #### Formula (Emerson/Khoo Method):
-> **Step 1:** I-calculate ang `pKa` (temperature-dependent):
-> ```
-> pKa ≈ 0.09018 + 2729.92/(T+273.15) + 4.4106 × log₁₀((T+273.15)/298.15)
-> ```
-> kung `T` = temperature in °C
->
-> **Step 2:** I-calculate ang fraction ng unionized ammonia:
-> ```
-> f(NH₃) = 1 / (1 + 10^((pKa - pH)))
-> ```
->
-> **Step 3:** Kung may TAN (Total Ammonia Nitrogen) measurement — even periodic lab tests:
-> ```
-> [NH₃] = TAN × f(NH₃)
-> ```
->
-> #### Practical Implementation:
-> | Scenario | Paano |
-> |----------|-------|
-> | **Walang TAN** | Gamitin lang ang pH + temp bilang **risk indicator** — high pH + warm temp = higher risk |
-> | **May periodic TAN** | I-compute ang exact NH₃ concentration gamit ang formula sa itaas |
-> | **Critical threshold** | ≥ 0.1 ppm unionized NH₃ = danger zone for mud crabs |
->
-> #### Quick Reference Table (CRAB_GRID Conditions):
-> Sa mga common condition sa project (27–30°C, pH 7.5–8.5):
->
-> | pH | Temp (°C) | Risk Level |
-> |----|-----------|------------|
-> | 7.5 | 27 | Low |
-> | 8.0 | 28 | Moderate |
-> | 8.5 | 30 | High |
->
-> #### Dashboard Warning Logic:
-> - **Alert Level:** pH > 8.2 AND temp > 28°C
-> - **Critical:** pH > 8.4 AND temp > 29°C
-> - I-logger ang pH + temp continuously, TAN samples periodically (weekly/biweekly lab test)
->
-> #### Recommendation for Thesis:
-> 1. Regular lab test ng TAN — weekly o biweekly — para ma-validate ang estimates
-> 2. Dashboard warning kapag pH > 8.2 at temp > 28°C = alert level
-> 3. I-logger ang pH + temp continuously, TAN samples periodically
->
-> **Reference:** Millero, F.J. et al. "The equilibrium constants of carbonic acid, boric acid and related species" (Chemical Reviews, 2006) — standard method for ammonia speciation.
 
 ## Deployment Corrections and Verification Gates
 
